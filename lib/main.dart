@@ -6,6 +6,9 @@ void main() {
 }
 
 class SchoolBoostApp extends StatelessWidget {
+
+  const SchoolBoostApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,8 +23,11 @@ class SchoolBoostApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
+
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -77,6 +83,8 @@ class _HomePageState extends State<HomePage> {
 
 // Donation Screen
 class DonationScreen extends StatelessWidget {
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
