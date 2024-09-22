@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'screens/home.dart'; // Ensure correct import of home.dart
+import 'screens/home.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async{
+   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(SchoolBoostApp());
 }
 
@@ -84,7 +87,7 @@ class _HomePageState extends State<HomePage> {
 // Donation Screen
 class DonationScreen extends StatelessWidget {
 
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

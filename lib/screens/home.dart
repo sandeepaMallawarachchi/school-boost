@@ -9,7 +9,7 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue[50],
+          color: const Color.fromARGB(255, 57, 171, 253),
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
