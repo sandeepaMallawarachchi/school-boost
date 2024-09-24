@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart'; // Make sure this imports the HomeScreen
 import 'screens/account.dart'; // Import the AccountScreen
+import 'components/login.dart'; // Import the LoginScreen
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/admin/add_campaigns.dart';
 
@@ -96,7 +97,7 @@ class DonationScreen extends StatelessWidget {
   }
 }
 
-// Updates Screen
+// Updates Screen (Navigate to Login)
 class UpdatesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -105,7 +106,15 @@ class UpdatesScreen extends StatelessWidget {
         title: Text('Updates'),
       ),
       body: Center(
-        child: Text('See the Latest Updates Here!'),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+            );
+          },
+          child: Text('Go to Login'),
+        ),
       ),
     );
   }
