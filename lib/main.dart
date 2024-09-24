@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'screens/home.dart';
+import 'screens/home.dart'; // Make sure this imports the HomeScreen
+import 'screens/account.dart'; // Import the AccountScreen
 import 'package:firebase_core/firebase_core.dart';
+import 'screens/admin/add_campaigns.dart';
 
-void main() async{
-   WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(SchoolBoostApp());
 }
 
 class SchoolBoostApp extends StatelessWidget {
-
   const SchoolBoostApp({super.key});
 
   @override
@@ -26,7 +27,6 @@ class SchoolBoostApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-
   const HomePage({super.key});
 
   @override
@@ -34,18 +34,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Keep track of the currently selected index in the BottomNavigationBar
   int _selectedIndex = 0;
 
-  // List of the screens corresponding to each nav bar item
   final List<Widget> _screens = [
-    HomeScreen(), // Correctly reference HomeScreen here
+    HomeScreen(),
     DonationScreen(),
     UpdatesScreen(),
     AccountScreen(),
   ];
 
-  // Function to handle when a BottomNavigationBar item is tapped
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -55,9 +52,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex], // Display the selected screen
+      body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Keep all icons visible
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -76,9 +73,9 @@ class _HomePageState extends State<HomePage> {
             label: 'Account',
           ),
         ],
-        currentIndex: _selectedIndex, // Highlight the selected item
-        selectedItemColor: Colors.blue[900], // Selected item color
-        onTap: _onItemTapped, // Call the function when an item is tapped
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue[900],
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -86,8 +83,6 @@ class _HomePageState extends State<HomePage> {
 
 // Donation Screen
 class DonationScreen extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +120,24 @@ class AccountScreen extends StatelessWidget {
         title: Text('Account'),
       ),
       body: Center(
-        child: Text('Manage your Account Here!'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Manage your Account Here!'),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddCampaignScreen(),
+                  ),
+                );
+              },
+              child: Text('Add Campaign Card'),
+            ),
+          ],
+        ),
       ),
     );
   }
