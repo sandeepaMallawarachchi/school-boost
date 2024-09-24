@@ -1,11 +1,15 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../services/database.dart';
+import '../../widgets/campaign_card.dart';
+import 'admin/add_campaigns.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final DatabaseService _dbService = DatabaseService();
+
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
@@ -29,6 +33,19 @@ class HomeScreen extends StatelessWidget {
                     title: Text('Home'),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddCampaignScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.all(16.0),
@@ -74,27 +91,33 @@ class HomeScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.blue[900],
                       ),
-                      textAlign: TextAlign.left,
                     ),
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          CampaignCard(
-                            imagePath: 'assets/images/campaign1.jpeg',
-                            title: 'Support 100 Rural Schools',
-                            description:
-                                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                          ),
-                          CampaignCard(
-                            imagePath: 'assets/images/campaign2.jpg',
-                            title: 'Connect Village with Technology',
-                            description:
-                                'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                          ),
-                        ],
-                      ),
+                    child: StreamBuilder<List<Map<String, dynamic>>>(
+                      stream: _dbService.getCampaigns(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        final campaigns = snapshot.data!;
+
+                        return ListView.builder(
+                          itemCount: campaigns.length,
+                          itemBuilder: (context, index) {
+                            final campaign = campaigns[index];
+                            return CampaignCard(
+                              imagePath: campaign['imageUrl'],
+                              title: campaign['title'],
+                              description: campaign['description'],
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -111,7 +134,11 @@ class CategoryCard extends StatelessWidget {
   final String imagePath;
   final String label;
 
-  CategoryCard({required this.imagePath, required this.label});
+  const CategoryCard({
+    required this.imagePath,
+    required this.label,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -140,81 +167,6 @@ class CategoryCard extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class CampaignCard extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String description;
-
-  CampaignCard(
-      {required this.imagePath,
-      required this.title,
-      required this.description});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 200,
-              ),
-            ),
-            Stack(
-              children: [
-                Positioned.fill(
-                  child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.vertical(bottom: Radius.circular(10)),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                      child: Container(
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue[900],
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        description,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }
