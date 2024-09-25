@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:school_boost/components/register.dart';
 
@@ -33,12 +32,12 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/Login.jpg'),
+                image: AssetImage('assets/images/backg.jpg'), // Use the new background image
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          
+
           // Positioned "Welcome Back, Log In!" at the top-left corner
           Positioned(
             top: 50,  // Adjust this to move the text down or up
@@ -65,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-          
+
           // Foreground Elements (TextFields, Buttons, etc.)
           Center(
             child: Padding(
@@ -86,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _usernameController,
                         decoration: InputDecoration(
                           hintText: 'User Name',
+                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
                           prefixIcon: Icon(Icons.person_outline),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -104,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _passwordController,
                         decoration: InputDecoration(
                           hintText: 'Password',
+                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
                           prefixIcon: Icon(Icons.lock_outline),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -119,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Handle register logic here
                       },
                       child: Text(
-                        'Forgot passwod?',
+                        'Forgot password?',
                         style: TextStyle(color: Colors.blue[700]),
                       ),
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_boost/components/register.dart';
+import 'package:school_boost/components/registration_form.dart';
 import 'screens/home.dart'; // Make sure this imports the HomeScreen
 
 import 'components/login.dart'; // Import the LoginScreen
@@ -128,6 +129,16 @@ class UpdatesScreen extends StatelessWidget {
                 );
               },
               child: Text('Go to Register'),
+            ),
+            SizedBox(height: 20), // Adds space between buttons
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignUpFormScreen()),
+                );
+              },
+              child: Text('Registration Form'),
             ),
           ],
         ),
