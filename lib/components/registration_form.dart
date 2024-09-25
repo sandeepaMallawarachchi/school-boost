@@ -169,6 +169,15 @@ class _SignUpScreenState extends State<SignUpFormScreen> {
                       ),
                     ),
                     SizedBox(height: 30),
+                    // Divider Line
+                    Container(
+                      width: 270, // Set the desired width for the divider
+                      child: Divider(
+                        color: const Color.fromARGB(255, 11, 87, 162),
+                        thickness: 2,
+                      ),
+                    ),
+                    SizedBox(height: 50),
 
                     // Create Button
                     ElevatedButton(
@@ -179,6 +188,8 @@ class _SignUpScreenState extends State<SignUpFormScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
+                        elevation:
+                            5,
                       ),
                       child: Text(
                         'Create',

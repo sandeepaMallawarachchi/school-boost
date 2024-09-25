@@ -32,7 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/backg.jpg'), // Use the new background image
+                image: AssetImage(
+                    'assets/images/backg.jpg'), // Use the new background image
                 fit: BoxFit.cover,
               ),
             ),
@@ -40,8 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Positioned "Welcome Back, Log In!" at the top-left corner
           Positioned(
-            top: 50,  // Adjust this to move the text down or up
-            left: 20,  // Adjust this to align the text more left or right
+            top: 50, // Adjust this to move the text down or up
+            left: 20, // Adjust this to align the text more left or right
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -85,10 +86,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _usernameController,
                         decoration: InputDecoration(
                           hintText: 'User Name',
-                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
+                          hintStyle: TextStyle(
+                              color:
+                                  Colors.grey), // Set hint text color to gray
                           prefixIcon: Icon(Icons.person_outline),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 18),
                         ),
                       ),
                     ),
@@ -104,10 +108,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _passwordController,
                         decoration: InputDecoration(
                           hintText: 'Password',
-                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
+                          hintStyle: TextStyle(
+                              color:
+                                  Colors.grey), // Set hint text color to gray
                           prefixIcon: Icon(Icons.lock_outline),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 18),
                         ),
                         obscureText: true,
                       ),
@@ -124,32 +131,46 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(color: Colors.blue[700]),
                       ),
                     ),
-                    SizedBox(height: 30),
+
+                    // Divider Line
+                    Container(
+                      width: 270, // Set the desired width for the divider
+                      child: Divider(
+                        color: const Color.fromARGB(255, 11, 87, 162),
+                        thickness: 2,
+                      ),
+                    ),
+                    SizedBox(height: 50),
 
                     // Login Button
                     ElevatedButton(
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18), 
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 100, vertical: 18),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
+                        elevation:
+                            5, // Add this line to specify the shadow's elevation
                       ),
                       child: Text(
                         'Login',
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
+
                     SizedBox(height: 15),
 
                     // Register
-                     TextButton(
+                    TextButton(
                       onPressed: () {
                         // Navigate to SignUpScreen when Register is clicked
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SignUpScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => SignUpScreen()),
                         );
                       },
                       child: Text(

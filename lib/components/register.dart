@@ -15,15 +15,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/backg.jpg'),  // Updated image path
+                image:
+                    AssetImage('assets/images/backg.jpg'), // Updated image path
                 fit: BoxFit.cover,
               ),
             ),
           ),
 
           Positioned(
-            top: 50,  // Adjust this to move the text down or up
-            left: 20,  // Adjust this to align the text more left or right
+            top: 50, // Adjust this to move the text down or up
+            left: 20, // Adjust this to align the text more left or right
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -55,7 +56,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 200), // Added spacing instead of the removed text
+                    SizedBox(
+                        height:
+                            200), // Added spacing instead of the removed text
 
                     // "Select Your Account Type" Text
                     Text(
@@ -74,11 +77,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // Handle donor account logic here
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 80, vertical: 18),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 80, vertical: 18),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
+                        elevation:
+                            5,
                       ),
                       child: Text(
                         'Donor Account',
@@ -88,15 +94,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height: 20),
 
                     // Divider Line
-Container(
-  width: 200,  // Set the desired width for the divider
-  child: Divider(
-    color: const Color.fromARGB(255, 11, 87, 162),
-    thickness: 2,
-  ),
-),
-SizedBox(height: 20),
-
+                    Container(
+                      width: 200, // Set the desired width for the divider
+                      child: Divider(
+                        color: const Color.fromARGB(255, 11, 87, 162),
+                        thickness: 2,
+                      ),
+                    ),
+                    SizedBox(height: 20),
 
                     // School Account Button
                     ElevatedButton(
@@ -104,11 +109,14 @@ SizedBox(height: 20),
                         // Handle school account logic here
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 80, vertical: 18),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 80, vertical: 18),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
+                        elevation:
+                            5,
                       ),
                       child: Text(
                         'School Account',

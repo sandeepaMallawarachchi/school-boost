@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    // SizedBox(height: 20),
+                    SizedBox(height: 20),
 
                     // Contact Number Field
                     Container(
@@ -164,37 +164,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 90),
-
-                    // Edit Profile Button with Shadow
+                    SizedBox(height: 50),
+                    // Divider Line
                     Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),  // Shadow color with some opacity
-                            blurRadius: 5,  // Blur radius for softness
-                            spreadRadius: 2,  // Spread of the shadow
-                            offset: Offset(0, 3),  // Offset to drop the shadow below the button
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(30),  // Same border radius as the button
+                      width: 270, // Set the desired width for the divider
+                      child: Divider(
+                        color: const Color.fromARGB(255, 11, 87, 162),
+                        thickness: 2,
                       ),
-                      child: ElevatedButton(
-                        onPressed: _editProfile,
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 80, vertical: 18),
-                          backgroundColor: Colors.blue.shade700,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        child: Text(
-                          'Edit Profile',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                    SizedBox(height: 70),
+
+                   
+                    //edit profile
+
+                    GestureDetector(
+                      onTap: () {
+                        // Handle log out logic
+                        print('User logged out');
+                      },
+                      child: Text(
+                        'Edit profile',
+                        style: TextStyle(
+                          color: Colors.blue[700],
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    SizedBox(height: 80),
+                                        SizedBox(height: 20),
+
 
                     // Log Out Link
                     GestureDetector(
