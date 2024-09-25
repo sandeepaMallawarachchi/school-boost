@@ -6,105 +6,164 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   // Mock login function
-  void _login() async {
-    String email = _emailController.text.trim();
+  void _login() {
+    String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    if (email.isNotEmpty && password.isNotEmpty) {
-      // Replace this with your actual login logic (e.g., API call)
-      bool isAuthenticated = await _authenticateUser(email, password);
-
-      if (isAuthenticated) {
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        _showError('Invalid email or password');
-      }
+    if (username.isNotEmpty && password.isNotEmpty) {
+      // Perform login logic
+      print('Username: $username, Password: $password');
     } else {
-      _showError('Please fill in both fields');
+      print('Please fill in both fields');
     }
-  }
-
-  // Mock authentication function
-  Future<bool> _authenticateUser(String email, String password) async {
-    // Simulate a real authentication request
-    await Future.delayed(Duration(seconds: 2));
-    // Replace this with actual authentication logic
-    return email == 'user@example.com' && password == 'password123';
-  }
-
-  void _showError(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        fit: StackFit.expand, // Make the background image fill the entire screen
         children: [
-          // Background image
-          Image.asset(
-            'assets/images/background.png',
-            fit: BoxFit.cover,
+          // Background Image
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/Login.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          // Login form
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          
+          // Positioned "Welcome Back, Log In!" at the top-left corner
+          Positioned(
+            top: 80,  // Adjust this to move the text down or up
+            left: 20,  // Adjust this to align the text more left or right
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    fillColor: Colors.white.withOpacity(0.8), // Add transparency to background color
-                    filled: true, // Make background of text field white
+                Text(
+                  'Welcome Back,',
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    fillColor: Colors.white.withOpacity(0.8),
-                    filled: true,
+                Text(
+                  'Login!',
+                  style: TextStyle(
+                    fontSize: 34,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  obscureText: true,
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _login,
-                  child: Text('Login'),
-                ),
-                SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    // Handle "Forgot Password" here
-                  },
-                  child: Text('Forgot Password?'),
                 ),
               ],
+            ),
+          ),
+          
+          // Foreground Elements (TextFields, Buttons, etc.)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 200), // Space from the top
+
+                    // Username TextField
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: TextField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          hintText: 'User Name',
+                          prefixIcon: Icon(Icons.person_outline),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+
+                    // Password TextField
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: TextField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          prefixIcon: Icon(Icons.lock_outline),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                        ),
+                        obscureText: true,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+
+                    // Forgot Password
+                    TextButton(
+                      onPressed: () {
+                        // Handle register logic here
+                      },
+                      child: Text(
+                        'Forgot passwod?',
+                        style: TextStyle(color: Colors.blue[700]),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+
+                    // Login Button
+                    ElevatedButton(
+                      onPressed: _login,
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18), 
+                        backgroundColor: Colors.blue.shade700,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: Text(
+                        'Login',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+
+                    // Register
+                    TextButton(
+                      onPressed: () {
+                        // Handle register logic here
+                      },
+                      child: Text(
+                        'Register',
+                        style: TextStyle(color: Colors.blue[700]),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: LoginScreen(),
+    debugShowCheckedModeBanner: false,
+  ));
 }
