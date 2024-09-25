@@ -61,12 +61,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Text(
                       'Select Your Account Type',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 23,
                         color: Colors.blue[700],
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: 80),
 
                     // Donor Account Button
                     ElevatedButton(
@@ -88,11 +88,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height: 20),
 
                     // Divider Line
-                    Divider(
-                      color: Colors.blue.shade700,
-                      thickness: 2,
-                    ),
-                    SizedBox(height: 20),
+Container(
+  width: 200,  // Set the desired width for the divider
+  child: Divider(
+    color: const Color.fromARGB(255, 11, 87, 162),
+    thickness: 2,
+  ),
+),
+SizedBox(height: 20),
+
 
                     // School Account Button
                     ElevatedButton(
