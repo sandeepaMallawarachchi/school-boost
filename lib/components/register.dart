@@ -15,7 +15,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/Login.jpg'),
+                image: AssetImage('assets/images/backg.jpg'),  // Updated image path
                 fit: BoxFit.cover,
               ),
             ),
@@ -46,7 +46,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
           ),
-
 
           // Foreground Elements
           Center(
@@ -114,9 +113,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
 
                     SizedBox(height: 20),
-
-                    // Register Button
-                    
                   ],
                 ),
               ),
