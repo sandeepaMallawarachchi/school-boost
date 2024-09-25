@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:school_boost/components/register.dart';
 import 'screens/home.dart'; // Make sure this imports the HomeScreen
-import 'screens/account.dart'; // Import the AccountScreen
+
 import 'components/login.dart'; // Import the LoginScreen
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/admin/add_campaigns.dart';
@@ -106,19 +107,36 @@ class UpdatesScreen extends StatelessWidget {
         title: Text('Updates'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
-            );
-          },
-          child: Text('Go to Login'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+              child: Text('Go to Login'),
+            ),
+            SizedBox(height: 20), // Adds space between buttons
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignUpScreen()),
+                );
+              },
+              child: Text('Go to Register'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+
 
 // Account Screen
 class AccountScreen extends StatelessWidget {

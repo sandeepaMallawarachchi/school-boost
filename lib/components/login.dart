@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:school_boost/components/register.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -39,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
           
           // Positioned "Welcome Back, Log In!" at the top-left corner
           Positioned(
-            top: 80,  // Adjust this to move the text down or up
+            top: 50,  // Adjust this to move the text down or up
             left: 20,  // Adjust this to align the text more left or right
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,9 +143,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 15),
 
                     // Register
-                    TextButton(
+                     TextButton(
                       onPressed: () {
-                        // Handle register logic here
+                        // Navigate to SignUpScreen when Register is clicked
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignUpScreen()),
+                        );
                       },
                       child: Text(
                         'Register',
