@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:school_boost/components/register.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -133,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     // Divider Line
-                    Container(
+                    SizedBox(
                       width: 270, // Set the desired width for the divider
                       child: Divider(
                         color: const Color.fromARGB(255, 11, 87, 162),

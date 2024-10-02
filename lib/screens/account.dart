@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'admin/add_campaigns.dart'; // Adjust the path as necessary
 
 class AccountScreen extends StatelessWidget {
+  const AccountScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

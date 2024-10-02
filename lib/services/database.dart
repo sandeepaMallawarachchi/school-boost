@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   // Add a campaign to Firestore
   Future<void> addCampaign(String title, String description, String imageUrl) async {
@@ -27,5 +30,21 @@ class DatabaseService {
             'imageUrl': doc['imageUrl'],
           }).toList();
     });
+  }
+
+  // Upload an image to Firebase Storage and return the download URL
+  Future<String> uploadImage(File image) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference storageRef = _storage.ref().child('campaign_images/$fileName');
+      UploadTask uploadTask = storageRef.putFile(image);
+      TaskSnapshot snapshot = await uploadTask;
+
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return '';
+    }
   }
 }

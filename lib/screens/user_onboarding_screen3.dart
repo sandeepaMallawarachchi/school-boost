@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // import 'user_onboarding_screen3.dart';
 
 class UserOnboardingScreen3 extends StatelessWidget {
+  const UserOnboardingScreen3({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

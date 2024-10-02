@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -166,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: 50),
                     // Divider Line
-                    Container(
+                    SizedBox(
                       width: 270, // Set the desired width for the divider
                       child: Divider(
                         color: const Color.fromARGB(255, 11, 87, 162),

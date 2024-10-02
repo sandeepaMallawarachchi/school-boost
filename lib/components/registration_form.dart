@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SignUpFormScreen extends StatefulWidget {
+  const SignUpFormScreen({super.key});
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -170,7 +172,7 @@ class _SignUpScreenState extends State<SignUpFormScreen> {
                     ),
                     SizedBox(height: 30),
                     // Divider Line
-                    Container(
+                    SizedBox(
                       width: 270, // Set the desired width for the divider
                       child: Divider(
                         color: const Color.fromARGB(255, 11, 87, 162),

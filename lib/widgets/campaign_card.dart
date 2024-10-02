@@ -9,8 +9,8 @@ class CampaignCard extends StatelessWidget {
     required this.imagePath,
     required this.title,
     required this.description,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +28,9 @@ class CampaignCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: 200,
+                errorBuilder: (context, error, stackTrace) {
+                  return Center(child: Text('Image not available'));
+                },
               ),
             ),
             Padding(

@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import '../../services/database.dart';
 
 class AddCampaignScreen extends StatefulWidget {
+  const AddCampaignScreen({super.key});
+
   @override
   _AddCampaignScreenState createState() => _AddCampaignScreenState();
 }
@@ -11,17 +13,16 @@ class AddCampaignScreen extends StatefulWidget {
 class _AddCampaignScreenState extends State<AddCampaignScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  File? _image; // Store the image file
+  File? _image;
   final DatabaseService _dbService = DatabaseService();
 
-  // Function to pick an image from the gallery
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path); // Set the picked image
+        _image = File(pickedFile.path);
       });
     }
   }
@@ -31,21 +32,16 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
     String description = _descriptionController.text.trim();
 
     if (title.isNotEmpty && description.isNotEmpty && _image != null) {
-      // Here you can upload the image to your database and get the URL
-      // For now, we will assume you have a method to handle image uploads
-      String imageUrl = await _uploadImage(_image!); // Implement this function
-
-      await _dbService.addCampaign(title, description, imageUrl);
-      Navigator.pop(context);
+      String imageUrl = await _dbService.uploadImage(_image!);
+      if (imageUrl.isNotEmpty) {
+        await _dbService.addCampaign(title, description, imageUrl);
+        Navigator.pop(context);
+      } else {
+        print('Failed to upload image');
+      }
     } else {
       print('Please fill in all fields');
     }
-  }
-
-  // Mock upload image function
-  Future<String> _uploadImage(File image) async {
-    // Implement your image upload logic here and return the image URL
-    return "https://example.com/your_uploaded_image.jpg"; // Placeholder
   }
 
   @override
