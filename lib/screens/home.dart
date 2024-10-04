@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Text(
                       'Latest Campaigns',
                       style: TextStyle(
@@ -100,7 +100,8 @@ class HomeScreen extends StatelessWidget {
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         }
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
                         }
 
@@ -110,6 +111,7 @@ class HomeScreen extends StatelessWidget {
                           itemCount: campaigns.length,
                           itemBuilder: (context, index) {
                             final campaign = campaigns[index];
+
                             return CampaignCard(
                               imagePath: campaign['imageUrl'],
                               title: campaign['title'],
@@ -144,22 +146,22 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 120,
-      margin: EdgeInsets.only(right: 8),
+      margin: EdgeInsets.only(left: 15, right: 15),
       child: Column(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.asset(
               imagePath,
-              height: 80,
-              width: 120,
+              height: 90,
+              width: 150,
               fit: BoxFit.cover,
             ),
           ),
           SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ],
