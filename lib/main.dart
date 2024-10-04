@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:school_boost/screens/categories/post_page.dart';
-import 'package:school_boost/components/register.dart';
-import 'package:school_boost/components/registration_form.dart';
-import 'package:school_boost/components/user_acc.dart';
+import 'package:school_boost/screens/auth/register.dart';
+import 'package:school_boost/screens/auth/registration_form.dart';
+import 'package:school_boost/screens/auth/user_acc.dart';
 import 'screens/home.dart'; // Make sure this imports the HomeScreen
 
-import 'components/login.dart'; // Import the LoginScreen
+import 'screens/auth/login.dart'; // Import the LoginScreen
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/admin/add_campaigns.dart';
 

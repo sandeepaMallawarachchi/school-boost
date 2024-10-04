@@ -17,7 +17,9 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   File? _image;
-  final DatabaseService _dbService = DatabaseService(); // Initialize the service
+  final DatabaseService _dbService = DatabaseService();
+
+  bool isLoading = false;
 
   // Default image path (in assets)
   final String defaultImagePath = 'assets/images/default.jpg';
@@ -45,7 +47,8 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
 
   // Function to get the default image as a File
   Future<File> _getDefaultImageFile() async {
-    final byteData = await rootBundle.load(defaultImagePath); // Load from assets
+    final byteData =
+        await rootBundle.load(defaultImagePath); // Load from assets
     final tempDir = await getTemporaryDirectory(); // Get temp directory
     final file = File('${tempDir.path}/default.jpg');
     await file.writeAsBytes(byteData.buffer.asUint8List());
@@ -54,6 +57,10 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
 
   // Function to add a campaign
   void _addCampaign() async {
+    setState(() {
+      isLoading = true; // Disable button and show "Adding Campaign..."
+    });
+
     String title = _titleController.text.trim();
     String description = _descriptionController.text.trim();
 
@@ -79,6 +86,10 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
     } else {
       _showSnackBar('Please fill in all fields and pick an image');
     }
+
+    setState(() {
+      isLoading = false; // Re-enable button and change text back
+    });
   }
 
   // Function to show a SnackBar with a message
@@ -97,7 +108,8 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/backg.jpg'), // Background image path
+                image: AssetImage(
+                    'assets/images/backg.jpg'), // Background image path
                 fit: BoxFit.cover,
               ),
             ),
@@ -188,9 +200,12 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
 
                     // Add Campaign Button
                     ElevatedButton(
-                      onPressed: _addCampaign,
+                      onPressed: isLoading
+                          ? null
+                          : _addCampaign, // Disable button if loading
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 80, vertical: 18),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 80, vertical: 18),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
@@ -198,7 +213,9 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                         elevation: 5,
                       ),
                       child: Text(
-                        'Add Campaign',
+                        isLoading
+                            ? 'Adding Campaign...'
+                            : 'Add Campaign', // Change text based on loading state
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
