@@ -1,7 +1,8 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class BestPerformersScreen extends StatelessWidget {
+  const BestPerformersScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

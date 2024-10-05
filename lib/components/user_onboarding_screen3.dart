@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'user_onboarding_screen2.dart';
+// import 'user_onboarding_screen3.dart';
 
-class UserOnboardingScreen1 extends StatelessWidget {
+class UserOnboardingScreen3 extends StatelessWidget {
+  const UserOnboardingScreen3({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,8 +20,7 @@ class UserOnboardingScreen1 extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Image.asset('assets/images/logo.png',
-                        width: 50, height: 50),
+                    Image.asset('assets/images/logo.png', width: 50, height: 50),
                     SizedBox(width: 10),
                     Text(
                       'School Boost',
@@ -31,10 +32,10 @@ class UserOnboardingScreen1 extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20), 
                 // Welcome message
                 Text(
-                  'Welcome to School Boost!',
+                  'Make a Difference Today!',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -42,20 +43,20 @@ class UserOnboardingScreen1 extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 10), 
                 // Description
                 Text(
-                  'Empower every student with the tools they need to succeed.',
+                  'Our contribution can transform the lives of students and uplift entire school communities.',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[700],
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 30), 
                 // Main illustration (add your own image)
-                Image.asset('assets/images/userOnboarding1.png', height: 250),
-                SizedBox(height: 30),
+                Image.asset('assets/images/userOnboarding3.png', height: 250),
+                SizedBox(height: 30), 
                 // Get Started button
                 ElevatedButton(
                   onPressed: () {
@@ -82,11 +83,11 @@ class UserOnboardingScreen1 extends StatelessWidget {
             right: 20,
             child: TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UserOnboardingScreen2()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => UserOnboardingScreen3()),
+                // );
               },
               child: Text(
                 'Skip',

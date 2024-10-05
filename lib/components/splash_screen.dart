@@ -3,6 +3,8 @@ import 'dart:async';
 import 'user_onboarding_screen1.dart'; // Import the onboarding screen
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

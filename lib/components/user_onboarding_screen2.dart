@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-// import 'user_onboarding_screen3.dart';
+import 'user_onboarding_screen3.dart';
 
-class UserOnboardingScreen3 extends StatelessWidget {
+class UserOnboardingScreen2 extends StatelessWidget {
+  const UserOnboardingScreen2({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,7 @@ class UserOnboardingScreen3 extends StatelessWidget {
                 SizedBox(height: 20), 
                 // Welcome message
                 Text(
-                  'Make a Difference Today!',
+                  'Recognizing Excellence!',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -44,7 +46,7 @@ class UserOnboardingScreen3 extends StatelessWidget {
                 SizedBox(height: 10), 
                 // Description
                 Text(
-                  'Our contribution can transform the lives of students and uplift entire school communities.',
+                  'We believe in rewarding hard work and talent.',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[700],
@@ -53,7 +55,7 @@ class UserOnboardingScreen3 extends StatelessWidget {
                 ),
                 SizedBox(height: 30), 
                 // Main illustration (add your own image)
-                Image.asset('assets/images/userOnboarding3.png', height: 250),
+                Image.asset('assets/images/userOnboarding2.png', height: 250),
                 SizedBox(height: 30), 
                 // Get Started button
                 ElevatedButton(
@@ -81,11 +83,11 @@ class UserOnboardingScreen3 extends StatelessWidget {
             right: 20,
             child: TextButton(
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => UserOnboardingScreen3()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => UserOnboardingScreen3()),
+                );
               },
               child: Text(
                 'Skip',

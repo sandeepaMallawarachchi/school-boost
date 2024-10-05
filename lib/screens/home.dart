@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DatabaseService _dbService = DatabaseService();
+    final DatabaseService dbService = DatabaseService();
 
     return SafeArea(
       child: Container(
@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Text(
                       'Latest Campaigns',
                       style: TextStyle(
@@ -95,12 +95,13 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: StreamBuilder<List<Map<String, dynamic>>>(
-                      stream: _dbService.getCampaigns(),
+                      stream: dbService.getCampaigns(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         }
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
                         }
 
@@ -110,6 +111,7 @@ class HomeScreen extends StatelessWidget {
                           itemCount: campaigns.length,
                           itemBuilder: (context, index) {
                             final campaign = campaigns[index];
+
                             return CampaignCard(
                               imagePath: campaign['imageUrl'],
                               title: campaign['title'],
@@ -137,33 +139,29 @@ class CategoryCard extends StatelessWidget {
   const CategoryCard({
     required this.imagePath,
     required this.label,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 150,
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      width: 120,
+      margin: EdgeInsets.only(left: 15, right: 15),
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8.0),
             child: Image.asset(
               imagePath,
-              height: 100,
+              height: 90,
               width: 150,
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue[900],
-            ),
+            style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ],

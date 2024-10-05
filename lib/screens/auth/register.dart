@@ -1,11 +1,35 @@
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  // Navigate to Donor Account SignUp form
+  void _handleDonorAccount() {
+    // Navigate to the donor registration form
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DonorSignUpScreen(),
+      ),
+    );
+  }
+
+  // Navigate to School Account SignUp form
+  void _handleSchoolAccount() {
+    // Navigate to the school registration form
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SchoolSignUpScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,16 +39,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image:
-                    AssetImage('assets/images/backg.jpg'), // Updated image path
+                image: AssetImage('assets/images/backg.jpg'), // Background image
                 fit: BoxFit.cover,
               ),
             ),
           ),
 
+          // Positioned Text "Hello! Sign Up"
           Positioned(
-            top: 50, // Adjust this to move the text down or up
-            left: 20, // Adjust this to align the text more left or right
+            top: 50,
+            left: 20,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,9 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                        height:
-                            200), // Added spacing instead of the removed text
+                    SizedBox(height: 200), // Adjust space at the top
 
                     // "Select Your Account Type" Text
                     Text(
@@ -73,18 +95,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     // Donor Account Button
                     ElevatedButton(
-                      onPressed: () {
-                        // Handle donor account logic here
-                      },
+                      onPressed: _handleDonorAccount, // Handle donor logic
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 80, vertical: 18),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 80,
+                          vertical: 18,
+                        ),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        elevation:
-                            5,
+                        elevation: 5,
                       ),
                       child: Text(
                         'Donor Account',
@@ -94,8 +115,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height: 20),
 
                     // Divider Line
-                    Container(
-                      width: 200, // Set the desired width for the divider
+                    SizedBox(
+                      width: 200,
                       child: Divider(
                         color: const Color.fromARGB(255, 11, 87, 162),
                         thickness: 2,
@@ -105,18 +126,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     // School Account Button
                     ElevatedButton(
-                      onPressed: () {
-                        // Handle school account logic here
-                      },
+                      onPressed: _handleSchoolAccount, // Handle school logic
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 80, vertical: 18),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 80,
+                          vertical: 18,
+                        ),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        elevation:
-                            5,
+                        elevation: 5,
                       ),
                       child: Text(
                         'School Account',
@@ -132,6 +152,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+// Mock Donor SignUp Screen (Replace with actual screen later)
+class DonorSignUpScreen extends StatelessWidget {
+  const DonorSignUpScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Donor Sign Up')),
+      body: Center(child: Text('Donor Sign Up Form')),
+    );
+  }
+}
+
+// Mock School SignUp Screen (Replace with actual screen later)
+class SchoolSignUpScreen extends StatelessWidget {
+  const SchoolSignUpScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('School Sign Up')),
+      body: Center(child: Text('School Sign Up Form')),
     );
   }
 }

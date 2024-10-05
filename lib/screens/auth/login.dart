@@ -1,26 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:school_boost/components/register.dart';
+import '../../services/auth.dart';
+import 'register.dart';
+import '../home.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Mock login function
-  void _login() {
-    String username = _usernameController.text.trim();
+  bool _isLoading = false;
+
+  // Login function using Firestore to validate credentials
+  Future<void> _login() async {
+    String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
 
-    if (username.isNotEmpty && password.isNotEmpty) {
-      // Perform login logic
-      print('Username: $username, Password: $password');
+    if (email.isNotEmpty && password.isNotEmpty) {
+      setState(() {
+        _isLoading = true; // Start loading
+      });
+
+      bool isValidUser = await validateUser(email, password);
+
+      setState(() {
+        _isLoading = false; // Stop loading after checking credentials
+      });
+
+      if (isValidUser) {
+        // Login successful
+        print('Login successful: $email');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else {
+        // Login failed
+        _showSnackBar('Login failed. Please check your credentials.');
+      }
     } else {
-      print('Please fill in both fields');
+      _showSnackBar('Please fill in both fields');
     }
+  }
+
+  // Show a SnackBar message
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -32,8 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/backg.jpg'), // Use the new background image
+                image: AssetImage('assets/images/backg.jpg'), // Background image
                 fit: BoxFit.cover,
               ),
             ),
@@ -41,8 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Positioned "Welcome Back, Log In!" at the top-left corner
           Positioned(
-            top: 50, // Adjust this to move the text down or up
-            left: 20, // Adjust this to align the text more left or right
+            top: 50,
+            left: 20,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,24 +105,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     SizedBox(height: 200), // Space from the top
 
-                    // Username TextField
+                    // Email TextField
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: TextField(
-                        controller: _usernameController,
+                        controller: _emailController,
                         decoration: InputDecoration(
-                          hintText: 'User Name',
-                          hintStyle: TextStyle(
-                              color:
-                                  Colors.grey), // Set hint text color to gray
-                          prefixIcon: Icon(Icons.person_outline),
+                          hintText: 'Email',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          prefixIcon: Icon(Icons.email), // Changed icon
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 18),
+                            horizontal: 20,
+                            vertical: 18,
+                          ),
                         ),
+                        keyboardType: TextInputType.emailAddress,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -108,13 +138,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _passwordController,
                         decoration: InputDecoration(
                           hintText: 'Password',
-                          hintStyle: TextStyle(
-                              color:
-                                  Colors.grey), // Set hint text color to gray
+                          hintStyle: TextStyle(color: Colors.grey),
                           prefixIcon: Icon(Icons.lock_outline),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 18),
+                            horizontal: 20,
+                            vertical: 18,
+                          ),
                         ),
                         obscureText: true,
                       ),
@@ -124,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Forgot Password
                     TextButton(
                       onPressed: () {
-                        // Handle register logic here
+                        // Handle "Forgot Password?" action
                       },
                       child: Text(
                         'Forgot password?',
@@ -133,8 +163,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     // Divider Line
-                    Container(
-                      width: 270, // Set the desired width for the divider
+                    SizedBox(
+                      width: 270,
                       child: Divider(
                         color: const Color.fromARGB(255, 11, 87, 162),
                         thickness: 2,
@@ -144,21 +174,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // Login Button
                     ElevatedButton(
-                      onPressed: _login,
+                      onPressed: _isLoading ? null : _login, // Disable button while loading
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 100, vertical: 18),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 100,
+                          vertical: 18,
+                        ),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        elevation:
-                            5, // Add this line to specify the shadow's elevation
+                        elevation: 5,
                       ),
-                      child: Text(
-                        'Login',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
+                      child: _isLoading
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Login',
+                              style: TextStyle(fontSize: 18, color: Colors.white),
+                            ),
                     ),
 
                     SizedBox(height: 15),
@@ -166,11 +206,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Register
                     TextButton(
                       onPressed: () {
-                        // Navigate to SignUpScreen when Register is clicked
+                        // Navigate to RegisterScreen when "Register" is clicked
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpScreen()),
+                            builder: (context) => SignUpScreen(),
+                          ),
                         );
                       },
                       child: Text(
@@ -187,11 +228,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: LoginScreen(),
-    debugShowCheckedModeBanner: false,
-  ));
 }
