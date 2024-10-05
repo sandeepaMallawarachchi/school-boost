@@ -12,7 +12,6 @@ class StudentFundApp extends StatelessWidget {
   }
 }
 
-class StudentFundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +61,6 @@ class StudentFundPage extends StatelessWidget {
                 children: [
                   // Title
 
-          
                   SizedBox(height: 150),
                   // BOC Section
                   Image.asset(
@@ -139,33 +137,11 @@ class StudentFundPage extends StatelessWidget {
                       ), // Background color
                     ),
                     child: Text(
-                      'Upload Slip',
-                      style: TextStyle(fontSize: 18,
-                      color: const Color.fromARGB(255, 255, 254, 254),
-                ),
-                      
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  // Help link
-                  TextButton(
-                    onPressed: () {
-                      // Help action
-                    },
-                    child: Text(
-                      'help',
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 35, 128, 204),
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            'Upload',
+            style: TextStyle(fontSize: 18),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
