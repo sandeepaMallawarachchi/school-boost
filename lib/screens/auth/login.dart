@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/auth.dart';
-import 'register.dart'; // Import the Register screen
-import 'package:firebase_auth/firebase_auth.dart';
+import 'register.dart';
+import '../home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,10 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isLoading = false;
 
-  // Firebase Authentication instance from AuthService
-  final AuthService _authService = AuthService();
-
-  // Login function using Firebase Authentication
+  // Login function using Firestore to validate credentials
   Future<void> _login() async {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
@@ -29,17 +26,19 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true; // Start loading
       });
 
-      User? user = await _authService.signInWithEmailPassword(email, password);
+      bool isValidUser = await validateUser(email, password);
 
       setState(() {
-        _isLoading = false; // Stop loading after the login process
+        _isLoading = false; // Stop loading after checking credentials
       });
 
-      if (user != null) {
+      if (isValidUser) {
         // Login successful
-        print('Login successful: ${user.email}');
-        // Navigate to home or dashboard screen after successful login
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        print('Login successful: $email');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       } else {
         // Login failed
         _showSnackBar('Login failed. Please check your credentials.');
@@ -175,9 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // Login Button
                     ElevatedButton(
-                      onPressed: _isLoading
-                          ? null
-                          : _login, // Disable button while loading
+                      onPressed: _isLoading ? null : _login, // Disable button while loading
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(
                           horizontal: 100,

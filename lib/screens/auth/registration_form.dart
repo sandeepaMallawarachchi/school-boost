@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:encrypt/encrypt.dart' as encrypt; // Alias the 'encrypt' package
+import '../../services/auth.dart'; // Import your auth file for saveUserDetails function
+import 'login.dart';
 
 class SignUpFormScreen extends StatefulWidget {
   const SignUpFormScreen({super.key});
@@ -10,87 +11,32 @@ class SignUpFormScreen extends StatefulWidget {
 }
 
 class _SignUpFormScreenState extends State<SignUpFormScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _contactNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _contactNumberController = TextEditingController(); 
 
-  void _register() async {
-    String username = _usernameController.text.trim();
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
-    String confirmPassword = _confirmPasswordController.text.trim();
-    String contactNumber = _contactNumberController.text.trim(); 
-
-    // Basic input validation
-    if (username.isEmpty || email.isEmpty || contactNumber.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please fill in all fields correctly')));
-      return;
-    }
-
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Passwords do not match')));
-      return;
-    }
-
-    final RegExp emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-    if (!emailRegex.hasMatch(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter a valid email address.')));
-      return;
-    }
-
-    try {
-      // Create user with email and password
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // Get the current user
-      User? user = userCredential.user;
-
-      // If user is created, save additional user details to Firestore
-      if (user != null) {
-        await _firestore.collection('users').doc(user.uid).set({
-          'username': username,
-          'email': email,
-          'contact_number': contactNumber,
-        });
-
-        print('User registered and details saved to Firestore: $username');
-        // You can navigate to another screen here if needed
-      }
-    } on FirebaseAuthException catch (e) {
-      // Handle error
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registration failed: ${e.message}')));
-    } catch (e) {
-      // Handle other potential errors
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
-    }
-  }
+  // AES Encryption setup
+  final encrypt.Key key = encrypt.Key.fromUtf8('16characterkey!');
+  final encrypt.IV iv = encrypt.IV.fromLength(16); // Use an IV for each encryption
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Decoration with an image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/backg.jpg'), 
-                fit: BoxFit.cover, 
+                image: AssetImage('assets/images/backg.jpg'),
+                fit: BoxFit.cover,
               ),
             ),
           ),
-
           Positioned(
-            top: 70,  
-            left: 50,  
+            top: 70,
+            left: 50,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -105,8 +51,6 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
               ],
             ),
           ),
-
-          // Page Content
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -114,35 +58,49 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 210), // Spacing from the top
-
+                    SizedBox(height: 210),
                     _buildTextField(_usernameController, 'User Name', Icons.person_outline),
                     SizedBox(height: 20),
-
                     _buildTextField(_emailController, 'Email', Icons.email_outlined),
                     SizedBox(height: 20),
-
-                    _buildTextField(_contactNumberController, 'Contact Number', Icons.phone, keyboardType: TextInputType.phone),
+                    _buildTextField(_contactNumberController, 'Contact Number', Icons.phone,
+                        keyboardType: TextInputType.phone),
                     SizedBox(height: 20),
-
-                    _buildTextField(_passwordController, 'Password', Icons.lock_outline, obscureText: true),
+                    _buildTextField(_passwordController, 'Password', Icons.lock_outline,
+                        obscureText: true),
                     SizedBox(height: 20),
-
-                    _buildTextField(_confirmPasswordController, 'Confirm Password', Icons.lock_outline, obscureText: true),
+                    _buildTextField(_confirmPasswordController, 'Confirm Password', Icons.lock_outline,
+                        obscureText: true),
                     SizedBox(height: 30),
-
-                    // Divider Line
                     Divider(
-                      color: const Color.fromARGB(255, 11, 87, 162),
-                      thickness: 2,
-                      indent: 35,
-                      endIndent: 35,
-                    ),
+                        color: const Color.fromARGB(255, 11, 87, 162),
+                        thickness: 2,
+                        indent: 35,
+                        endIndent: 35),
                     SizedBox(height: 50),
-
-                    // Create Button
                     ElevatedButton(
-                      onPressed: _register,
+                      onPressed: () async {
+                        if (_passwordController.text.trim() == _confirmPasswordController.text.trim()) {
+                          // Encrypt the password
+                          String encryptedPassword = encryptPassword(_passwordController.text.trim());
+
+                          // Call the saveUserDetails function from auth.dart
+                          bool success = await saveUserDetails(
+                            _usernameController.text.trim(),
+                            _emailController.text.trim(),
+                            _contactNumberController.text.trim(),
+                            encryptedPassword, // Pass the encrypted password
+                          );
+
+                          if (success) {
+                            _showSuccessAlert(); // Show success alert
+                          } else {
+                            _showErrorAlert('Failed to register. Please try again.'); // Show error alert
+                          }
+                        } else {
+                          _showErrorAlert('Passwords do not match.');
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18),
                         backgroundColor: Colors.blue.shade700,
@@ -157,8 +115,6 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
                       ),
                     ),
                     SizedBox(height: 20),
-
-                    // Already have an account? Link
                     GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
@@ -181,7 +137,10 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hintText, IconData prefixIcon, {bool obscureText = false, TextInputType keyboardType = TextInputType.text}) {
+  // Build TextField with reusable widget
+  Widget _buildTextField(
+      TextEditingController controller, String hintText, IconData prefixIcon,
+      {bool obscureText = false, TextInputType keyboardType = TextInputType.text}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.9),
@@ -198,6 +157,56 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
         ),
         obscureText: obscureText,
         keyboardType: keyboardType,
+      ),
+    );
+  }
+
+  // Encrypt the password using AES encryption
+  String encryptPassword(String password) {
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    final encrypted = encrypter.encrypt(password, iv: iv);
+    return encrypted.base64; // Return encrypted password
+  }
+
+  // Show success dialog and navigate to the login screen
+  void _showSuccessAlert() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Success!'),
+        content: Text('Registration successful!'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LoginScreen())); // Navigate to login screen
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Show error dialog
+  void _showErrorAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Error!'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Text('OK'),
+          ),
+        ],
       ),
     );
   }

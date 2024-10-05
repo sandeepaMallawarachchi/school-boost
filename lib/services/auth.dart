@@ -1,62 +1,42 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// auth.dart
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // Sign in with email and password
-  Future<User?> signInWithEmailPassword(String email, String password) async {
-    try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return result.user;
-    } catch (e) {
-      print('Error signing in: $e');
-      return null;
-    }
+Future<bool> saveUserDetails(String username, String email, String contactNumber, String encryptedPassword) async {
+  if (username.isEmpty || email.isEmpty || contactNumber.isEmpty || encryptedPassword.isEmpty) {
+    print('Missing user details, registration cannot proceed.');
+    return false;
   }
 
-  // Register with email and password
-  Future<User?> registerWithEmailPassword(String email, String password) async {
-    try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return result.user;
-    } catch (e) {
-      print('Error registering: $e');
-      return null;
-    }
-  }
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Sign out
-  Future<void> signOut() async {
-    try {
-      await _auth.signOut();
-    } catch (e) {
-      print('Error signing out: $e');
-    }
+  try {
+    await firestore.collection('users').add({
+      'username': username,
+      'email': email,
+      'contact_number': contactNumber,
+      'password': encryptedPassword,
+    });
+    print('User details saved to Firestore: $username');
+    return true;
+  } catch (e) {
+    print('Error saving user details: $e');
+    return false;
   }
+}
 
-  // Check auth state
-  Stream<User?> get authStateChanges {
-    return _auth.authStateChanges();
-  }
+Future<bool> validateUser(String email, String password) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Optional: Method to reset password
-  Future<void> sendPasswordResetEmail(String email) async {
-    try {
-      await _auth.sendPasswordResetEmail(email: email);
-      print('Password reset email sent');
-    } catch (e) {
-      print('Error sending password reset email: $e');
-    }
-  }
+  try {
+    QuerySnapshot querySnapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .where('password', isEqualTo: password)
+        .get();
 
-  // Optional: Method to get the current user
-  User? getCurrentUser() {
-    return _auth.currentUser;
+    return querySnapshot.docs.isNotEmpty;
+  } catch (e) {
+    print('Error validating user: $e');
+    return false;
   }
 }
