@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_boost/screens/bank_details.dart';
 import 'package:school_boost/screens/categories/post_page.dart';
 import 'package:school_boost/screens/auth/register.dart';
 import 'package:school_boost/screens/auth/registration_form.dart';
@@ -165,6 +166,16 @@ class UpdatesScreen extends StatelessWidget {
                 );
               },
               child: Text('Post Page'),
+            ),
+              SizedBox(height: 20), // Adds space between buttons
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StudentFundApp()),
+                );
+              },
+              child: Text('Bank Details'),
             ),
           ],
         ),
