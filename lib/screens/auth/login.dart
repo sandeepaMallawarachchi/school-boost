@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../services/auth.dart';
-import 'register.dart';
-import '../home.dart';
+import 'package:crypto/crypto.dart'; // Import crypto for SHA-256 hashing
+import 'dart:convert'; // For utf8.encode
+import '../../services/auth.dart'; // Import your auth functions
+import '../home.dart'; // Home screen to navigate after successful login
+import './registration_form.dart'; // Register screen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,6 +18,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isLoading = false;
 
+  // Hash the password using SHA256 (same as registration)
+  String hashPassword(String password) {
+    var bytes = utf8.encode(password); // Convert password to bytes
+    var digest = sha256.convert(bytes); // Perform SHA-256 hash
+    return digest.toString(); // Return hashed password as string
+  }
+
   // Login function using Firestore to validate credentials
   Future<void> _login() async {
     String email = _emailController.text.trim();
@@ -26,14 +35,18 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true; // Start loading
       });
 
-      bool isValidUser = await validateUser(email, password);
+      // Hash the password before validation
+      String hashedPassword = hashPassword(password);
+
+      // Call validateUser from auth.dart to check credentials
+      bool isValidUser = await validateUser(email, hashedPassword);
 
       setState(() {
         _isLoading = false; // Stop loading after checking credentials
       });
 
       if (isValidUser) {
-        // Login successful
+        // Login successful, navigate to HomeScreen
         print('Login successful: $email');
         Navigator.pushReplacement(
           context,
@@ -44,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _showSnackBar('Login failed. Please check your credentials.');
       }
     } else {
-      _showSnackBar('Please fill in both fields');
+      _showSnackBar('Please fill in both fields.');
     }
   }
 
@@ -210,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SignUpScreen(),
+                            builder: (context) => SignUpFormScreen(),
                           ),
                         );
                       },

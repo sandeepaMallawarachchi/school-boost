@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 // for utf8.encode and base64 encoding
 
+// Save user details to Firestore during registration
 Future<bool> saveUserDetails(String username, String email, String contactNumber, String encryptedPassword) async {
   if (username.isEmpty || email.isEmpty || contactNumber.isEmpty || encryptedPassword.isEmpty) {
     print('Missing user details, registration cannot proceed.');
@@ -24,6 +25,7 @@ Future<bool> saveUserDetails(String username, String email, String contactNumber
   }
 }
 
+// Validate user credentials during login
 Future<bool> validateUser(String email, String password) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
