@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:encrypt/encrypt.dart' as encrypt; // Alias the 'encrypt' package
+import 'package:crypto/crypto.dart'; // Import crypto for SHA-256 hashing
+import 'dart:convert'; // for utf8.encode and base64 encoding
 import '../../services/auth.dart'; // Import your auth file for saveUserDetails function
 import 'login.dart';
 
@@ -16,10 +17,6 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
   final TextEditingController _contactNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-
-  // AES Encryption setup
-  final encrypt.Key key = encrypt.Key.fromUtf8('16characterkey!');
-  final encrypt.IV iv = encrypt.IV.fromLength(16); // Use an IV for each encryption
 
   @override
   Widget build(BuildContext context) {
@@ -81,15 +78,15 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_passwordController.text.trim() == _confirmPasswordController.text.trim()) {
-                          // Encrypt the password
-                          String encryptedPassword = encryptPassword(_passwordController.text.trim());
+                          // Hash the password using SHA256
+                          String hashedPassword = hashPassword(_passwordController.text.trim());
 
                           // Call the saveUserDetails function from auth.dart
                           bool success = await saveUserDetails(
                             _usernameController.text.trim(),
                             _emailController.text.trim(),
                             _contactNumberController.text.trim(),
-                            encryptedPassword, // Pass the encrypted password
+                            hashedPassword, // Pass the hashed password
                           );
 
                           if (success) {
@@ -161,11 +158,11 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
     );
   }
 
-  // Encrypt the password using AES encryption
-  String encryptPassword(String password) {
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-    final encrypted = encrypter.encrypt(password, iv: iv);
-    return encrypted.base64; // Return encrypted password
+  // Hash the password using SHA256
+  String hashPassword(String password) {
+    var bytes = utf8.encode(password); // Convert password to bytes
+    var digest = sha256.convert(bytes); // Perform SHA-256 hash
+    return digest.toString(); // Return hashed password as string
   }
 
   // Show success dialog and navigate to the login screen

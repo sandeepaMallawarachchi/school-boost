@@ -1,5 +1,5 @@
-// auth.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+// for utf8.encode and base64 encoding
 
 Future<bool> saveUserDetails(String username, String email, String contactNumber, String encryptedPassword) async {
   if (username.isEmpty || email.isEmpty || contactNumber.isEmpty || encryptedPassword.isEmpty) {
