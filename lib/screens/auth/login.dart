@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isLoading = false;
+  bool _isPasswordVisible = false; // Manage password visibility
 
   // Hash the password using SHA256 (same as registration)
   String hashPassword(String password) {
@@ -46,11 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       if (isValidUser) {
-        // Login successful, navigate to HomeScreen
-        print('Login successful: $email');
-        Navigator.pushReplacement(
-          context,
+        // Navigate to HomeScreen and clear all previous routes
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => HomeScreen()),
+          (Route<dynamic> route) => false, // This removes all previous routes
         );
       } else {
         // Login failed
@@ -63,7 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Show a SnackBar message
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -75,7 +76,8 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/backg.jpg'), // Background image
+                image:
+                    AssetImage('assets/images/backg.jpg'), // Background image
                 fit: BoxFit.cover,
               ),
             ),
@@ -141,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 20),
 
-                    // Password TextField
+                    // Password TextField with "eye" icon to toggle visibility
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.8),
@@ -149,17 +151,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: TextField(
                         controller: _passwordController,
+                        obscureText:
+                            !_isPasswordVisible, // Toggle password visibility
                         decoration: InputDecoration(
                           hintText: 'Password',
                           hintStyle: TextStyle(color: Colors.grey),
                           prefixIcon: Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
-                            horizontal: 20,
+                            horizontal: 15,
                             vertical: 18,
                           ),
                         ),
-                        obscureText: true,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -187,7 +202,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // Login Button
                     ElevatedButton(
-                      onPressed: _isLoading ? null : _login, // Disable button while loading
+                      onPressed: _isLoading
+                          ? null
+                          : _login, // Disable button while loading
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(
                           horizontal: 100,
@@ -210,7 +227,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             )
                           : Text(
                               'Login',
-                              style: TextStyle(fontSize: 18, color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
                             ),
                     ),
 

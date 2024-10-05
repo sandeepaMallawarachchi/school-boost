@@ -14,9 +14,15 @@ class SignUpFormScreen extends StatefulWidget {
 class _SignUpFormScreenState extends State<SignUpFormScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactNumberController = TextEditingController();
+  final TextEditingController _contactNumberController =
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  bool _isPasswordVisible = false; // Manage password visibility
+  bool _isConfirmPasswordVisible = false; // Manage confirm password visibility
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,18 +62,58 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: 210),
-                    _buildTextField(_usernameController, 'User Name', Icons.person_outline),
+                    _buildTextField(
+                        _usernameController, 'User Name', Icons.person_outline),
                     SizedBox(height: 20),
-                    _buildTextField(_emailController, 'Email', Icons.email_outlined),
+                    _buildTextField(
+                        _emailController, 'Email', Icons.email_outlined),
                     SizedBox(height: 20),
-                    _buildTextField(_contactNumberController, 'Contact Number', Icons.phone,
+                    _buildTextField(
+                        _contactNumberController, 'Contact Number', Icons.phone,
                         keyboardType: TextInputType.phone),
                     SizedBox(height: 20),
-                    _buildTextField(_passwordController, 'Password', Icons.lock_outline,
-                        obscureText: true),
+
+                    // Password TextField with "eye" icon to toggle visibility
+                    _buildTextField(
+                      _passwordController,
+                      'Password',
+                      Icons.lock_outline,
+                      obscureText: !_isPasswordVisible,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
+                    ),
                     SizedBox(height: 20),
-                    _buildTextField(_confirmPasswordController, 'Confirm Password', Icons.lock_outline,
-                        obscureText: true),
+
+                    // Confirm Password TextField with "eye" icon to toggle visibility
+                    _buildTextField(
+                      _confirmPasswordController,
+                      'Confirm Password',
+                      Icons.lock_outline,
+                      obscureText: !_isConfirmPasswordVisible,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isConfirmPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isConfirmPasswordVisible =
+                                !_isConfirmPasswordVisible;
+                          });
+                        },
+                      ),
+                    ),
                     SizedBox(height: 30),
                     Divider(
                         color: const Color.fromARGB(255, 11, 87, 162),
@@ -76,10 +122,12 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
                         endIndent: 35),
                     SizedBox(height: 50),
                     ElevatedButton(
-                      onPressed: () async {
-                        if (_passwordController.text.trim() == _confirmPasswordController.text.trim()) {
+                      onPressed: _isLoading ? null : () async {
+                        if (_passwordController.text.trim() ==
+                            _confirmPasswordController.text.trim()) {
                           // Hash the password using SHA256
-                          String hashedPassword = hashPassword(_passwordController.text.trim());
+                          String hashedPassword =
+                              hashPassword(_passwordController.text.trim());
 
                           // Call the saveUserDetails function from auth.dart
                           bool success = await saveUserDetails(
@@ -92,24 +140,37 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
                           if (success) {
                             _showSuccessAlert(); // Show success alert
                           } else {
-                            _showErrorAlert('Failed to register. Please try again.'); // Show error alert
+                            _showErrorAlert(
+                                'Failed to register. Please try again.'); // Show error alert
                           }
                         } else {
                           _showErrorAlert('Passwords do not match.');
                         }
                       },
+                      
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 100, vertical: 18),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                         elevation: 5,
                       ),
-                      child: Text(
-                        'Create',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
+                      child: _isLoading
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Register',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
                     ),
                     SizedBox(height: 20),
                     GestureDetector(
@@ -134,10 +195,12 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
     );
   }
 
-  // Build TextField with reusable widget
+  // Build TextField with reusable widget, added suffixIcon for visibility toggle
   Widget _buildTextField(
       TextEditingController controller, String hintText, IconData prefixIcon,
-      {bool obscureText = false, TextInputType keyboardType = TextInputType.text}) {
+      {bool obscureText = false,
+      TextInputType keyboardType = TextInputType.text,
+      Widget? suffixIcon}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.9),
@@ -149,6 +212,7 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey),
           prefixIcon: Icon(prefixIcon),
+          suffixIcon: suffixIcon, // Add suffix icon for the "eye" icon
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         ),
@@ -179,8 +243,7 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          LoginScreen())); // Navigate to login screen
+                      builder: (context) => LoginScreen())); // Navigate to login screen
             },
             child: Text('OK'),
           ),
