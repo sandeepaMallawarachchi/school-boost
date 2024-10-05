@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:school_boost/screens/categories/post_page.dart';
-import 'package:school_boost/components/register.dart';
-import 'package:school_boost/components/registration_form.dart';
-import 'package:school_boost/components/user_acc.dart';
+import 'package:school_boost/screens/auth/register.dart';
+import 'package:school_boost/screens/auth/registration_form.dart';
+import 'package:school_boost/screens/auth/user_acc.dart';
 import 'screens/home.dart'; // Make sure this imports the HomeScreen
 
-import 'components/login.dart'; // Import the LoginScreen
+import 'screens/auth/login.dart'; // Import the LoginScreen
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/admin/add_campaigns.dart';
 
@@ -88,6 +88,8 @@ class _HomePageState extends State<HomePage> {
 
 // Donation Screen
 class DonationScreen extends StatelessWidget {
+  const DonationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,6 +105,8 @@ class DonationScreen extends StatelessWidget {
 
 // Updates Screen (Navigate to Login)
 class UpdatesScreen extends StatelessWidget {
+  const UpdatesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,6 +177,8 @@ class UpdatesScreen extends StatelessWidget {
 
 // Account Screen
 class AccountScreen extends StatelessWidget {
+  const AccountScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

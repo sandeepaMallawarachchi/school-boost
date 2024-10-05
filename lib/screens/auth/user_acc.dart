@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 
-class SignUpFormScreen extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpFormScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _contactNumberController = TextEditingController(); // New controller
+  final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
-  void _register() {
-    // Handle registration logic
-    String username = _usernameController.text.trim();
+  void _editProfile() {
+    // Handle Edit Profile logic
     String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
-    String confirmPassword = _confirmPasswordController.text.trim();
-    String contactNumber = _contactNumberController.text.trim(); // Add this line
+    String contact = _contactController.text.trim();
+    String age = _ageController.text.trim();
+    String address = _addressController.text.trim();
 
-    if (username.isNotEmpty && email.isNotEmpty && password == confirmPassword && contactNumber.isNotEmpty) {
-      // Perform registration
-      print('Registering user: $username, Email: $email, Contact: $contactNumber');
-    } else {
-      print('Please fill in all fields correctly');
-    }
+    // Perform some action with this data
+    print('Email: $email, Contact: $contact, Age: $age, Address: $address');
   }
 
   @override
@@ -33,26 +29,26 @@ class _SignUpScreenState extends State<SignUpFormScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Decoration with an image
+          // Background Image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/backg.jpg'), // Set your background image here
-                fit: BoxFit.cover, // This will cover the whole screen
+                image: AssetImage('assets/images/Donor_reg.jpg'), // Set the background image
+                fit: BoxFit.cover,
               ),
             ),
           ),
 
           Positioned(
-            top: 70,  // Adjust this to move the text down or up
-            left: 50,  // Adjust this to align the text more left or right
+            top: 60,  // Adjust this to move the text down or up
+            left: 40,  // Adjust this to align the text more left or right
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Register',
+                  'User Name',
                   style: TextStyle(
-                    fontSize: 34,
+                    fontSize: 32,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
@@ -69,27 +65,32 @@ class _SignUpScreenState extends State<SignUpFormScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Spacing from the top
-                    SizedBox(height: 210),
-
-                    // Username Field
+                    SizedBox(height: 40),
+                    // User Icon
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(30),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),  // Shadow color with some opacity
+                            blurRadius: 5,  // Blur radius for softness
+                            spreadRadius: 2,  // Spread of the shadow
+                            offset: Offset(0, 3),  // Offset to drop the shadow below the avatar
+                          ),
+                        ],
                       ),
-                      child: TextField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          hintText: 'User Name',
-                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
-                          prefixIcon: Icon(Icons.person_outline),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey.shade300,
+                        child: Icon(
+                          Icons.person_outline,
+                          size: 60,
+                          color: Colors.blueAccent,
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+
+                    SizedBox(height: 40),
 
                     // Email Field
                     Container(
@@ -101,7 +102,7 @@ class _SignUpScreenState extends State<SignUpFormScreen> {
                         controller: _emailController,
                         decoration: InputDecoration(
                           hintText: 'Email',
-                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
+                          hintStyle: TextStyle(color: Colors.grey),  // Set hint text color to gray
                           prefixIcon: Icon(Icons.email_outlined),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -117,95 +118,92 @@ class _SignUpScreenState extends State<SignUpFormScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: TextField(
-                        controller: _contactNumberController, // This should not show an error
+                        controller: _contactController,
                         decoration: InputDecoration(
-                          hintText: 'Contact Number', // Updated hint text
-                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
-                          prefixIcon: Icon(Icons.phone), // Phone icon
+                          hintText: 'Contact Number',
+                          hintStyle: TextStyle(color: Colors.grey),  // Set hint text color to gray
+                          prefixIcon: Icon(Icons.phone_outlined),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                         ),
-                        keyboardType: TextInputType.phone, // Phone keyboard type
                       ),
                     ),
                     SizedBox(height: 20),
 
-                    // Password Field
+                    // Age Field
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: TextField(
-                        controller: _passwordController,
+                        controller: _ageController,
                         decoration: InputDecoration(
-                          hintText: 'Password',
-                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
-                          prefixIcon: Icon(Icons.lock_outline),
+                          hintText: 'Birthday',
+                          hintStyle: TextStyle(color: Colors.grey),  // Set hint text color to gray
+                          prefixIcon: Icon(Icons.cake_outlined),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                         ),
-                        obscureText: true,
                       ),
                     ),
                     SizedBox(height: 20),
 
-                    // Confirm Password Field
+                    // Address Field
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: TextField(
-                        controller: _confirmPasswordController,
+                        controller: _addressController,
                         decoration: InputDecoration(
-                          hintText: 'Confirm Password',
-                          hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
-                          prefixIcon: Icon(Icons.lock_outline),
+                          hintText: 'Address',
+                          hintStyle: TextStyle(color: Colors.grey),  // Set hint text color to gray
+                          prefixIcon: Icon(Icons.location_on_outlined),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                         ),
-                        obscureText: true,
                       ),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: 50),
                     // Divider Line
-                    Container(
+                    SizedBox(
                       width: 270, // Set the desired width for the divider
                       child: Divider(
                         color: const Color.fromARGB(255, 11, 87, 162),
                         thickness: 2,
                       ),
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: 70),
 
-                    // Create Button
-                    ElevatedButton(
-                      onPressed: _register,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18),
-                        backgroundColor: Colors.blue.shade700,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation:
-                            5,
-                      ),
-                      child: Text(
-                        'Create',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(height: 20),
+                   
+                    //edit profile
 
-                    // Already have an account? Link
                     GestureDetector(
                       onTap: () {
-                        // Handle navigation to login
-                        Navigator.pop(context);
+                        // Handle log out logic
+                        print('User logged out');
                       },
                       child: Text(
-                        'Already have an account?',
+                        'Edit profile',
+                        style: TextStyle(
+                          color: Colors.blue[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                                        SizedBox(height: 20),
+
+
+                    // Log Out Link
+                    GestureDetector(
+                      onTap: () {
+                        // Handle log out logic
+                        print('User logged out');
+                      },
+                      child: Text(
+                        'Log Out?',
                         style: TextStyle(
                           color: Colors.blue[700],
                           fontWeight: FontWeight.bold,
@@ -225,7 +223,7 @@ class _SignUpScreenState extends State<SignUpFormScreen> {
 
 void main() {
   runApp(MaterialApp(
-    home: SignUpFormScreen(),
+    home: ProfileScreen(),
     debugShowCheckedModeBanner: false,
   ));
 }
