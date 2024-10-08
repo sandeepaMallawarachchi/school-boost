@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_boost/widgets/upload_slip_popup.dart';
 
 void main() => runApp(StudentFundApp());
 
@@ -12,6 +13,7 @@ class StudentFundApp extends StatelessWidget {
   }
 }
 
+class StudentFundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +29,7 @@ class StudentFundApp extends StatelessWidget {
             ),
           ),
           // Content
-           Positioned(
+          Positioned(
             top: 50,
             left: 50,
             child: Column(
@@ -100,7 +102,7 @@ class StudentFundApp extends StatelessWidget {
                   // People's Bank Section
                   Image.asset(
                     'assets/images/peoples bank.png',
-                    height: 80,
+                    height: 60,
                   ),
                   SizedBox(height: 10),
                   Text(
@@ -131,17 +133,41 @@ class StudentFundApp extends StatelessWidget {
                       // Upload slip action
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15), backgroundColor:const Color.fromRGBO(25, 118, 210, 1),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      backgroundColor: const Color.fromRGBO(25, 118, 210, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ), // Background color
                     ),
                     child: Text(
-            'Upload',
-            style: TextStyle(fontSize: 18),
+                      'Upload Slip',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: const Color.fromARGB(255, 255, 254, 254),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  // Help link
+                  TextButton(
+                    onPressed: () {
+                     
+                    },
+                    child: Text(
+                      'help',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 35, 128, 204),
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
