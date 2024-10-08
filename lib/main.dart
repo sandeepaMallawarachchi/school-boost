@@ -3,11 +3,10 @@ import 'package:school_boost/screens/categories/post_page.dart';
 import 'package:school_boost/screens/auth/register.dart';
 import 'package:school_boost/screens/auth/registration_form.dart';
 import 'package:school_boost/screens/auth/user_acc.dart';
-import 'screens/home.dart'; // Make sure this imports the HomeScreen
+import 'screens/home.dart'; 
 
-import 'screens/auth/login.dart'; // Import the LoginScreen
+import 'screens/auth/login.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/admin/add_campaigns.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     HomeScreen(),
     DonationScreen(),
     UpdatesScreen(),
-    AccountScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -165,42 +164,6 @@ class UpdatesScreen extends StatelessWidget {
                 );
               },
               child: Text('Post Page'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-
-// Account Screen
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Account'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Manage your Account Here!'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddCampaignScreen(),
-                  ),
-                );
-              },
-              child: Text('Add Campaign Card'),
             ),
           ],
         ),

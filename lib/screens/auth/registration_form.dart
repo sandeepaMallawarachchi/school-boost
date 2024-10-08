@@ -24,7 +24,7 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
 
   bool _isPasswordVisible = false; // Manage password visibility
   bool _isConfirmPasswordVisible = false; // Manage confirm password visibility
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {

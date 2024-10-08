@@ -1,62 +1,77 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
-Future<bool> saveUserDetails(String username, String email, String contactNumber, String encryptedPassword, String uid, String address) async {
-  if (username.isEmpty || email.isEmpty || contactNumber.isEmpty || encryptedPassword.isEmpty || address.isEmpty) {
-    print('Missing user details, registration cannot proceed.');
-    return false;
-  }
+class AuthService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // Function to update user details
+  Future<bool> updateUserDetails(
+    String uid, 
+    String username, 
+    String email, 
+    String contactNumber, 
+    String address,
+    {String? profileImageUrl} // Optional profile image URL
+  ) async {
+    try {
+      // Create a map for user data to update
+      Map<String, dynamic> userData = {
+        'username': username,
+        'email': email,
+        'contact_number': contactNumber,
+        'address': address,
+      };
 
-  try {
-    await firestore.collection('users').doc(uid).set({
-      'username': username,
-      'email': email,
-      'contact_number': contactNumber,
-      'password': encryptedPassword,
-      'address': address, // Store the address
-    });
-    print('User details saved to Firestore: $username');
-    return true;
-  } catch (e) {
-    print('Error saving user details: $e');
-    return false;
-  }
-}
+      // If profileImageUrl is provided, add it to the userData map
+      if (profileImageUrl != null) {
+        userData['profile_image'] = profileImageUrl;
+      }
 
-// Validate user credentials during login
-Future<bool> validateUser(String email, String password) async {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  try {
-    QuerySnapshot querySnapshot = await firestore
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .where('password', isEqualTo: password)
-        .get();
-
-    return querySnapshot.docs.isNotEmpty;
-  } catch (e) {
-    print('Error validating user: $e');
-    return false;
-  }
-}
-
-// Retrieve user data from Firestore by UID
-Future<Map<String, dynamic>?> getUserData(String uid) async {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  try {
-    DocumentSnapshot documentSnapshot = await firestore.collection('users').doc(uid).get();
-
-    if (documentSnapshot.exists) {
-      return documentSnapshot.data() as Map<String, dynamic>?;
-    } else {
-      print('User data not found for UID: $uid');
-      return null;
+      // Update Firestore document for the user
+      await _firestore.collection('users').doc(uid).update(userData);
+      return true;
+    } catch (e) {
+      print('Error updating user details: $e');
+      return false;
     }
-  } catch (e) {
-    print('Error retrieving user data: $e');
-    return null;
+  }
+
+  // Function to upload profile image to Firebase Storage and return the download URL
+  Future<String> uploadProfileImage(File image) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference storageRef = _storage.ref().child('profile_images/$fileName');
+      UploadTask uploadTask = storageRef.putFile(image);
+      TaskSnapshot snapshot = await uploadTask;
+
+      // Get the download URL for the uploaded image
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading profile image: $e');
+      return ''; // Return an empty string on error
+    }
+  }
+
+  // Function to save profile image and update Firestore user document
+  Future<bool> saveProfileImage(String uid, File image) async {
+    try {
+      // Upload image to Firebase Storage
+      String imageUrl = await uploadProfileImage(image);
+
+      if (imageUrl.isNotEmpty) {
+        // Update the user's profile image URL in Firestore
+        await _firestore.collection('users').doc(uid).update({
+          'profile_image': imageUrl,
+        });
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error saving profile image: $e');
+      return false;
+    }
   }
 }
