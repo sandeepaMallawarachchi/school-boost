@@ -19,6 +19,8 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  final TextEditingController _addressController =
+      TextEditingController(); // New Address Controller
 
   bool _isPasswordVisible = false; // Manage password visibility
   bool _isConfirmPasswordVisible = false; // Manage confirm password visibility
@@ -73,6 +75,11 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
                         keyboardType: TextInputType.phone),
                     SizedBox(height: 20),
 
+                    // Address TextField
+                    _buildTextField(_addressController, 'Address',
+                        Icons.location_on_outlined), // Added Address field
+                    SizedBox(height: 20),
+
                     // Password TextField with "eye" icon to toggle visibility
                     _buildTextField(
                       _passwordController,
@@ -122,32 +129,41 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
                         endIndent: 35),
                     SizedBox(height: 50),
                     ElevatedButton(
-                      onPressed: _isLoading ? null : () async {
-                        if (_passwordController.text.trim() ==
-                            _confirmPasswordController.text.trim()) {
-                          // Hash the password using SHA256
-                          String hashedPassword =
-                              hashPassword(_passwordController.text.trim());
+                      onPressed: _isLoading
+                          ? null
+                          : () async {
+                              if (_passwordController.text.trim() ==
+                                  _confirmPasswordController.text.trim()) {
+                                // Hash the password using SHA256
+                                String hashedPassword = hashPassword(
+                                    _passwordController.text.trim());
 
-                          // Call the saveUserDetails function from auth.dart
-                          bool success = await saveUserDetails(
-                            _usernameController.text.trim(),
-                            _emailController.text.trim(),
-                            _contactNumberController.text.trim(),
-                            hashedPassword, // Pass the hashed password
-                          );
+                                // Generate a unique user ID (you might get this from Firebase Auth or elsewhere)
+                                String uid = DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(); // Example UID generator
 
-                          if (success) {
-                            _showSuccessAlert(); // Show success alert
-                          } else {
-                            _showErrorAlert(
-                                'Failed to register. Please try again.'); // Show error alert
-                          }
-                        } else {
-                          _showErrorAlert('Passwords do not match.');
-                        }
-                      },
-                      
+                                // Call the saveUserDetails function from auth.dart
+                                bool success = await saveUserDetails(
+                                  _usernameController.text.trim(),
+                                  _emailController.text.trim(),
+                                  _contactNumberController.text.trim(),
+                                  hashedPassword, // Pass the hashed password
+                                  uid, // Pass the generated UID
+                                  _addressController.text
+                                      .trim(), // Pass the address
+                                );
+
+                                if (success) {
+                                  _showSuccessAlert(); // Show success alert
+                                } else {
+                                  _showErrorAlert(
+                                      'Failed to register. Please try again.'); // Show error alert
+                                }
+                              } else {
+                                _showErrorAlert('Passwords do not match.');
+                              }
+                            },
                       style: ElevatedButton.styleFrom(
                         padding:
                             EdgeInsets.symmetric(horizontal: 100, vertical: 18),
@@ -243,7 +259,8 @@ class _SignUpFormScreenState extends State<SignUpFormScreen> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => LoginScreen())); // Navigate to login screen
+                      builder: (context) =>
+                          LoginScreen())); // Navigate to login screen
             },
             child: Text('OK'),
           ),

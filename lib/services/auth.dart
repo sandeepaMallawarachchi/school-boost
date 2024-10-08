@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-// for utf8.encode and base64 encoding
 
-// Save user details to Firestore during registration
-Future<bool> saveUserDetails(String username, String email, String contactNumber, String encryptedPassword) async {
-  if (username.isEmpty || email.isEmpty || contactNumber.isEmpty || encryptedPassword.isEmpty) {
+Future<bool> saveUserDetails(String username, String email, String contactNumber, String encryptedPassword, String uid, String address) async {
+  if (username.isEmpty || email.isEmpty || contactNumber.isEmpty || encryptedPassword.isEmpty || address.isEmpty) {
     print('Missing user details, registration cannot proceed.');
     return false;
   }
@@ -11,11 +9,12 @@ Future<bool> saveUserDetails(String username, String email, String contactNumber
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   try {
-    await firestore.collection('users').add({
+    await firestore.collection('users').doc(uid).set({
       'username': username,
       'email': email,
       'contact_number': contactNumber,
       'password': encryptedPassword,
+      'address': address, // Store the address
     });
     print('User details saved to Firestore: $username');
     return true;
@@ -40,5 +39,24 @@ Future<bool> validateUser(String email, String password) async {
   } catch (e) {
     print('Error validating user: $e');
     return false;
+  }
+}
+
+// Retrieve user data from Firestore by UID
+Future<Map<String, dynamic>?> getUserData(String uid) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  try {
+    DocumentSnapshot documentSnapshot = await firestore.collection('users').doc(uid).get();
+
+    if (documentSnapshot.exists) {
+      return documentSnapshot.data() as Map<String, dynamic>?;
+    } else {
+      print('User data not found for UID: $uid');
+      return null;
+    }
+  } catch (e) {
+    print('Error retrieving user data: $e');
+    return null;
   }
 }
