@@ -171,14 +171,26 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                     TextField(
                       controller: _titleController,
                       decoration: InputDecoration(
-                        labelText: 'Campaign Title',
-                        labelStyle: TextStyle(color: Colors.blue[900]),
+                        hintText: 'Campaign Title', // Placeholder text
+                        hintStyle: TextStyle(
+                            color: Colors.grey), // Placeholder text color
+                        prefixIcon: Icon(Icons.title,
+                            color:
+                                Colors.grey), // Add an icon like login fields
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.8),
+                        fillColor: Colors.white
+                            .withOpacity(0.8), // Semi-transparent background
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(
+                              30), // Circular corners like in login fields
+                          borderSide: BorderSide.none, // Remove borders
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 18,
                         ),
                       ),
+                      keyboardType: TextInputType.text,
                     ),
                     SizedBox(height: 20),
 
@@ -186,15 +198,26 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                     TextField(
                       controller: _descriptionController,
                       decoration: InputDecoration(
-                        labelText: 'Description',
-                        labelStyle: TextStyle(color: Colors.blue[900]),
+                        hintText: 'Description', // Placeholder text
+                        hintStyle: TextStyle(
+                            color: Colors.grey), // Placeholder text color
+                        prefixIcon: Icon(Icons.description,
+                            color: Colors.grey), // Add an icon
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.8),
+                        fillColor: Colors.white
+                            .withOpacity(0.8), // Semi-transparent background
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(
+                              30), // Circular corners like in login fields
+                          borderSide: BorderSide.none, // Remove borders
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 18,
                         ),
                       ),
-                      maxLines: 3,
+                      maxLines: 3, // Allow multiple lines for description
+                      keyboardType: TextInputType.multiline,
                     ),
                     SizedBox(height: 20),
 

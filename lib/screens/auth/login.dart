@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../services/auth.dart';
-import 'register.dart';
-import '../home.dart';
+import 'package:crypto/crypto.dart'; // Import crypto for SHA-256 hashing
+import 'dart:convert'; // For utf8.encode
+import '../../services/auth.dart'; // Import your auth functions
+import '../home.dart'; // Home screen to navigate after successful login
+import './registration_form.dart'; // Register screen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +17,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isLoading = false;
+  bool _isPasswordVisible = false; // Manage password visibility
+
+  // Hash the password using SHA256 (same as registration)
+  String hashPassword(String password) {
+    var bytes = utf8.encode(password); // Convert password to bytes
+    var digest = sha256.convert(bytes); // Perform SHA-256 hash
+    return digest.toString(); // Return hashed password as string
+  }
 
   // Login function using Firestore to validate credentials
   Future<void> _login() async {
@@ -26,31 +36,35 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true; // Start loading
       });
 
-      bool isValidUser = await validateUser(email, password);
+      // Hash the password before validation
+      String hashedPassword = hashPassword(password);
+
+      // Call validateUser from auth.dart to check credentials
+      bool isValidUser = await validateUser(email, hashedPassword);
 
       setState(() {
         _isLoading = false; // Stop loading after checking credentials
       });
 
       if (isValidUser) {
-        // Login successful
-        print('Login successful: $email');
-        Navigator.pushReplacement(
-          context,
+        // Navigate to HomeScreen and clear all previous routes
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => HomeScreen()),
+          (Route<dynamic> route) => false, // This removes all previous routes
         );
       } else {
         // Login failed
         _showSnackBar('Login failed. Please check your credentials.');
       }
     } else {
-      _showSnackBar('Please fill in both fields');
+      _showSnackBar('Please fill in both fields.');
     }
   }
 
   // Show a SnackBar message
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -62,7 +76,8 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/backg.jpg'), // Background image
+                image:
+                    AssetImage('assets/images/backg.jpg'), // Background image
                 fit: BoxFit.cover,
               ),
             ),
@@ -128,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 20),
 
-                    // Password TextField
+                    // Password TextField with "eye" icon to toggle visibility
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.8),
@@ -136,17 +151,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: TextField(
                         controller: _passwordController,
+                        obscureText:
+                            !_isPasswordVisible, // Toggle password visibility
                         decoration: InputDecoration(
                           hintText: 'Password',
                           hintStyle: TextStyle(color: Colors.grey),
                           prefixIcon: Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
-                            horizontal: 20,
+                            horizontal: 15,
                             vertical: 18,
                           ),
                         ),
-                        obscureText: true,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -174,7 +202,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // Login Button
                     ElevatedButton(
-                      onPressed: _isLoading ? null : _login, // Disable button while loading
+                      onPressed: _isLoading
+                          ? null
+                          : _login, // Disable button while loading
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(
                           horizontal: 100,
@@ -197,7 +227,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             )
                           : Text(
                               'Login',
-                              style: TextStyle(fontSize: 18, color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
                             ),
                     ),
 
@@ -210,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SignUpScreen(),
+                            builder: (context) => SignUpFormScreen(),
                           ),
                         );
                       },
