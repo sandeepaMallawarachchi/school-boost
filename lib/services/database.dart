@@ -53,4 +53,23 @@ class DatabaseService {
       return ''; // Return an empty string on error
     }
   }
+
+  //equipment donation
+  Future<void> addEquipment(
+    String name, String phone, String address, String type, String condition, String pickupLocation) async {
+  try {
+    await _firestore.collection('equipments').add({
+      'name': name,
+      'phone': phone,
+      'address': address,
+      'type': type,
+      'condition': condition,
+      'pickupLocation': pickupLocation,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  } catch (e) {
+    print('Error adding equipment: $e');
+    rethrow;
+  }
+}
 }

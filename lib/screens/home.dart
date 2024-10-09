@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../services/database.dart';
 import '../../widgets/campaign_card.dart';
 import 'admin/add_campaigns.dart';
+import 'package:school_boost/screens/categories/equipment_donation.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -66,18 +67,36 @@ class HomeScreen extends StatelessWidget {
                         CategoryCard(
                           imagePath: 'assets/images/category1.jpg',
                           label: 'Equipment',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EquipmentDonationPage(), // Navigate to Equipment Donation Page
+                              ),
+                            );
+                          },
                         ),
                         CategoryCard(
                           imagePath: 'assets/images/category2.jpg',
                           label: 'Exam Support',
+                          onTap: () {
+                            // Add navigation logic for Exam Support here
+                          },
                         ),
                         CategoryCard(
                           imagePath: 'assets/images/category3.jpg',
                           label: 'Events',
+                          onTap: () {
+                            // Add navigation logic for Events here
+                          },
                         ),
                         CategoryCard(
                           imagePath: 'assets/images/category4.jpg',
                           label: 'Best Performers',
+                          onTap: () {
+                            // Add navigation logic for Best Performers here
+                          },
                         ),
                       ],
                     ),
@@ -135,36 +154,41 @@ class HomeScreen extends StatelessWidget {
 class CategoryCard extends StatelessWidget {
   final String imagePath;
   final String label;
+  final VoidCallback onTap; // Add onTap callback
 
   const CategoryCard({
     required this.imagePath,
     required this.label,
+    required this.onTap, // Add this line to accept onTap callback
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 120,
-      margin: EdgeInsets.only(left: 15, right: 15),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.asset(
-              imagePath,
-              height: 90,
-              width: 150,
-              fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: onTap, // Trigger the onTap callback when the card is clicked
+      child: Container(
+        width: 120,
+        margin: EdgeInsets.only(left: 15, right: 15),
+        child: Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset(
+                imagePath,
+                height: 90,
+                width: 150,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

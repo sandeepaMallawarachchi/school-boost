@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<bool> saveUserDetails(String username, String email, String contactNumber, String encryptedPassword, String uid, String address) async {
   if (username.isEmpty || email.isEmpty || contactNumber.isEmpty || encryptedPassword.isEmpty || address.isEmpty) {
@@ -35,11 +36,25 @@ Future<bool> validateUser(String email, String password) async {
         .where('password', isEqualTo: password)
         .get();
 
-    return querySnapshot.docs.isNotEmpty;
+    if (querySnapshot.docs.isNotEmpty) {
+      // User exists, save UID to local storage
+      String uid = querySnapshot.docs.first.id; // Get the UID from the first document
+      await _saveUidToLocalStorage(uid); // Save UID to local storage
+      return true;
+    }
+    
+    return false;
   } catch (e) {
     print('Error validating user: $e');
     return false;
   }
+}
+
+// Function to save UID to local storage
+Future<void> _saveUidToLocalStorage(String uid) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('user_uid', uid);
+  print('UID saved to local storage: $uid');
 }
 
 // Retrieve user data from Firestore by UID

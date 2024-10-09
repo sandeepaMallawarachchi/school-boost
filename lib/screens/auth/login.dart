@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:crypto/crypto.dart'; // Import crypto for SHA-256 hashing
+import 'package:crypto/crypto.dart';
 import 'dart:convert'; // For utf8.encode
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 import '../../services/auth.dart'; // Import your auth functions
 import '../../main.dart'; // Home screen to navigate after successful login
 import './registration_form.dart'; // Register screen
@@ -49,24 +50,21 @@ class _LoginScreenState extends State<LoginScreen> {
       if (isValidUser) {
         // Navigate to HomeScreen and clear all previous routes
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (context) =>
-                  HomePage()), // Change HomeScreen to HomePage
+          MaterialPageRoute(builder: (context) => HomePage()), // Change HomeScreen to HomePage
           (Route<dynamic> route) => false,
         );
       } else {
-        // Login failed
-        _showSnackBar('Login failed. Please check your credentials.');
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid email or password!')),
+        );
       }
     } else {
-      _showSnackBar('Please fill in both fields.');
+      // Show message for empty fields
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in both fields!')),
+      );
     }
-  }
-
-  // Show a SnackBar message
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -78,32 +76,21 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image:
-                    AssetImage('assets/images/backg.jpg'), // Background image
+                image: AssetImage('assets/images/Donor_reg.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-
-          // Positioned "Welcome Back, Log In!" at the top-left corner
           Positioned(
-            top: 50,
-            left: 20,
+            top: 60,
+            left: 40,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome Back,',
+                  'User Login',
                   style: TextStyle(
-                    fontSize: 28,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Login!',
-                  style: TextStyle(
-                    fontSize: 34,
+                    fontSize: 32,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
@@ -111,145 +98,50 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-
-          // Foreground Elements (TextFields, Buttons, etc.)
+          // Page Content
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 200), // Space from the top
-
-                    // Email TextField
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: TextField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          hintText: 'Email',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          prefixIcon: Icon(Icons.email), // Changed icon
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 18,
-                          ),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                    ),
+                    SizedBox(height: 80),
+                    // Email Field
+                    _buildTextField(_emailController, 'Email', Icons.email_outlined, false),
                     SizedBox(height: 20),
-
-                    // Password TextField with "eye" icon to toggle visibility
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: TextField(
-                        controller: _passwordController,
-                        obscureText:
-                            !_isPasswordVisible, // Toggle password visibility
-                        decoration: InputDecoration(
-                          hintText: 'Password',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          prefixIcon: Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-
-                    // Forgot Password
-                    TextButton(
-                      onPressed: () {
-                        // Handle "Forgot Password?" action
-                      },
-                      child: Text(
-                        'Forgot password?',
-                        style: TextStyle(color: Colors.blue[700]),
-                      ),
-                    ),
-
-                    // Divider Line
-                    SizedBox(
-                      width: 270,
-                      child: Divider(
-                        color: const Color.fromARGB(255, 11, 87, 162),
-                        thickness: 2,
-                      ),
-                    ),
-                    SizedBox(height: 50),
-
+                    // Password Field
+                    _buildTextField(_passwordController, 'Password', Icons.lock_outline, true),
+                    SizedBox(height: 30),
                     // Login Button
-                    ElevatedButton(
-                      onPressed: _isLoading
-                          ? null
-                          : _login, // Disable button while loading
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 100,
-                          vertical: 18,
+                    if (_isLoading)
+                      CircularProgressIndicator() // Show loading spinner
+                    else
+                      ElevatedButton(
+                        onPressed: _login,
+                        child: Text('Login'),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18),
+                          backgroundColor: Colors.blue.shade700,
+                          textStyle: TextStyle(color: Colors.white, fontSize: 18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          elevation: 5,
                         ),
-                        backgroundColor: Colors.blue.shade700,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: 5,
                       ),
-                      child: _isLoading
-                          ? SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(
-                              'Login',
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ),
-                    ),
-
-                    SizedBox(height: 15),
-
-                    // Register
+                    SizedBox(height: 20),
+                    // Register Button
                     TextButton(
                       onPressed: () {
-                        // Navigate to RegisterScreen when "Register" is clicked
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUpFormScreen(),
-                          ),
+                          MaterialPageRoute(builder: (context) => SignUpFormScreen()), // Ensure proper import
                         );
                       },
                       child: Text(
-                        'Register',
-                        style: TextStyle(color: Colors.blue[700]),
+                        "Don't have an account? Register here",
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ],
@@ -261,4 +153,40 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  // Build reusable text field for email and password
+  Widget _buildTextField(TextEditingController controller, String hintText, IconData prefixIcon, bool isPassword) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: isPassword && !_isPasswordVisible, // Toggle password visibility
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.grey),
+          prefixIcon: Icon(prefixIcon),
+          suffixIcon: isPassword ? IconButton(
+            icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+            onPressed: () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible; // Toggle password visibility
+              });
+            },
+          ) : null,
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: LoginScreen(),
+    debugShowCheckedModeBanner: false,
+  ));
 }

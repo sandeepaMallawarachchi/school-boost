@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 import '../../services/auth.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,52 +16,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _contactController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
-  bool _isEditing = false; // To track if the user has edited any field
+  bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    String uid = '1728153802305';
-    _loadUserData(uid);
+    _loadUserData(); // Load user data on init
   }
 
   // Load user data from Firestore
-  Future<void> _loadUserData(String uid) async {
-    DocumentSnapshot userData =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    if (userData.exists) {
-      var data = userData.data() as Map<String, dynamic>;
-      _usernameController.text = data['username'];
-      _emailController.text = data['email'];
-      _contactController.text = data['contact_number'];
-      _addressController.text = data['address'];
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? uid = prefs.getString('user_uid'); // Get UID from local storage
+
+    if (uid != null) {
+      DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (userData.exists) {
+        var data = userData.data() as Map<String, dynamic>;
+        _usernameController.text = data['username'] ?? '';
+        _emailController.text = data['email'] ?? '';
+        _contactController.text = data['contact_number'] ?? '';
+        _addressController.text = data['address'] ?? '';
+      } else {
+        print('User data not found for UID: $uid');
+      }
     } else {
-      print('User data not found for UID: $uid');
+      print('No UID found in local storage.');
     }
   }
 
   // Update user details in Firestore
   Future<void> _saveProfile() async {
-    String uid = '1728153802305'; // Use actual UID in production
-    String username = _usernameController.text.trim();
-    String email = _emailController.text.trim();
-    String contact = _contactController.text.trim();
-    String address = _addressController.text.trim();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? uid = prefs.getString('user_uid'); // Get UID from local storage
 
-    bool result =
-        await updateUserDetails(uid, username, email, contact, address);
+    if (uid != null) {
+      String username = _usernameController.text.trim();
+      String email = _emailController.text.trim();
+      String contact = _contactController.text.trim();
+      String address = _addressController.text.trim();
 
-    if (result) {
-      setState(() {
-        _isEditing = false; // Reset editing state after saving
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile updated successfully!')),
-      );
+      bool result = await updateUserDetails(uid, username, email, contact, address);
+
+      if (result) {
+        setState(() {
+          _isEditing = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile updated successfully!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update profile.')),
+        );
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update profile.')),
-      );
+      print('No UID found in local storage.');
     }
   }
 
@@ -78,7 +89,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-
           Positioned(
             top: 60,
             left: 40,
@@ -96,7 +106,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-
           // Page Content
           Center(
             child: Padding(
@@ -129,29 +138,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-
                     SizedBox(height: 40),
-
                     // Username Field
-                    _buildTextField(
-                        _usernameController, 'Username', Icons.person_outline),
+                    _buildTextField(_usernameController, 'Username', Icons.person_outline),
                     SizedBox(height: 20),
-
                     // Email Field
-                    _buildTextField(
-                        _emailController, 'Email', Icons.email_outlined),
+                    _buildTextField(_emailController, 'Email', Icons.email_outlined),
                     SizedBox(height: 20),
-
                     // Contact Number Field
-                    _buildTextField(_contactController, 'Contact Number',
-                        Icons.phone_outlined),
+                    _buildTextField(_contactController, 'Contact Number', Icons.phone_outlined),
                     SizedBox(height: 20),
-
                     // Address Field
-                    _buildTextField(_addressController, 'Address',
-                        Icons.location_on_outlined),
+                    _buildTextField(_addressController, 'Address', Icons.location_on_outlined),
                     SizedBox(height: 50),
-
                     // Divider Line
                     SizedBox(
                       width: 270,
@@ -161,19 +160,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     SizedBox(height: 70),
-
                     // Save Button (only when editing)
                     if (_isEditing)
                       ElevatedButton(
                         onPressed: _saveProfile,
                         child: Text('Save'),
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 100, vertical: 18),
+                          padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18),
                           backgroundColor: Colors.blue.shade700,
-                          textStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18), // Added text style
+                          textStyle: TextStyle(color: Colors.white, fontSize: 18),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -191,8 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Build reusable text field
-  Widget _buildTextField(
-      TextEditingController controller, String hintText, IconData prefixIcon) {
+  Widget _buildTextField(TextEditingController controller, String hintText, IconData prefixIcon) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.9),
