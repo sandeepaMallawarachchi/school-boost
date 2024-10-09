@@ -25,7 +25,7 @@ class SchoolBoostApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(), // Starting with the HomePage that contains the nav bar
+      home: LoginScreen(), // Starting with the HomePage that contains the nav bar
     );
   }
 }

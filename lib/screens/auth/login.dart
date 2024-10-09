@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart'; // Import crypto for SHA-256 hashing
 import 'dart:convert'; // For utf8.encode
 import '../../services/auth.dart'; // Import your auth functions
-import '../home.dart'; // Home screen to navigate after successful login
+import '../../main.dart'; // Home screen to navigate after successful login
 import './registration_form.dart'; // Register screen
 
 class LoginScreen extends StatefulWidget {
@@ -49,8 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (isValidUser) {
         // Navigate to HomeScreen and clear all previous routes
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-          (Route<dynamic> route) => false, // This removes all previous routes
+          MaterialPageRoute(
+              builder: (context) =>
+                  HomePage()), // Change HomeScreen to HomePage
+          (Route<dynamic> route) => false,
         );
       } else {
         // Login failed
