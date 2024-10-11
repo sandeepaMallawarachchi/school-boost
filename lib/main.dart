@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_boost/screens/bank_details.dart';
+import 'package:school_boost/screens/categories/exam_support_clicked_post.dart';
+import 'package:school_boost/screens/categories/exam_support_exam_select.dart';
 import 'package:school_boost/screens/categories/post_page.dart';
 import 'package:school_boost/screens/auth/register.dart';
 import 'package:school_boost/screens/auth/registration_form.dart';
@@ -177,12 +179,23 @@ class UpdatesScreen extends StatelessWidget {
               },
               child: Text('Bank Details'),
             ),
+            SizedBox(height: 20), // Adds space between buttons
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ExamSupportPage()),
+                );
+              },
+              child: Text('Exam support'),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
 //hi
 
