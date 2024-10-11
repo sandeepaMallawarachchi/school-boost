@@ -74,6 +74,12 @@ class _ExamSupportPageState extends State<ExamSupportPage> {
         Spacer(), // This pushes the content down as much as possible
 
         // Card with shadow and border around the image
+ Center(
+  child: Padding(
+    padding: const EdgeInsets.only(top: 260.0, left: 16.0, right: 16.0), // Adjust the top padding as needed
+    child: Column(
+      children: [
+        // Card with shadow and border around the image
         Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height * 0.35, // 35% of the screen height
@@ -113,7 +119,7 @@ class _ExamSupportPageState extends State<ExamSupportPage> {
 
         // Dummy text
         Text(
-          'Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs...',
+          '     Lorem ipsum, or lipsum as it is  to an unknown typesetter in the 15th century who is thought to have scrambled parts of Ciceros De Finibus Bonorum et Malorum for use in a type specimen book. It usually begins with:',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14,
@@ -121,7 +127,7 @@ class _ExamSupportPageState extends State<ExamSupportPage> {
           ),
         ),
 
-        SizedBox(height: 20),
+        SizedBox(height: 30),
 
         // Contact School Button
         ElevatedButton(
@@ -144,7 +150,15 @@ class _ExamSupportPageState extends State<ExamSupportPage> {
             ),
           ),
         ),
+      ],
+    ),
+  ),
+),
 
+        SizedBox(height: 20),
+
+        // Contact School Button
+       
         Spacer(), // This pushes the content up from the bottom as needed
       ],
     ),
