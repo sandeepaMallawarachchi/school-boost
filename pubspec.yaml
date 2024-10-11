@@ -20,6 +20,7 @@ dependencies:
   encrypt: ^5.0.0
   crypto: ^3.0.0
   shared_preferences: ^2.0.10
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

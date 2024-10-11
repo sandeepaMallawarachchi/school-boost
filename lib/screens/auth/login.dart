@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert'; // For utf8.encode
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 import '../../services/auth.dart'; // Import your auth functions
 import '../../main.dart'; // Home screen to navigate after successful login
 import './registration_form.dart'; // Register screen
@@ -70,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // Prevents background from resizing when keyboard appears
       body: Stack(
         children: [
           // Background Image
@@ -119,16 +119,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     else
                       ElevatedButton(
                         onPressed: _login,
-                        child: Text('Login'),
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18),
-                          backgroundColor: Colors.blue.shade700,
-                          textStyle: TextStyle(color: Colors.white, fontSize: 18),
+                          backgroundColor: Colors.blue.shade700, // Use same background blue shade
+                          textStyle: TextStyle(color: Colors.white, fontSize: 18), // Ensure white text
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                           elevation: 5,
                         ),
+                        child: Text('Login', style: TextStyle(color: Colors.white)), // Ensure text remains white
                       ),
                     SizedBox(height: 20),
                     // Register Button
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: Text(
                         "Don't have an account? Register here",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.blue[900]), // Keep blue text for registration
                       ),
                     ),
                   ],

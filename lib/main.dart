@@ -4,9 +4,9 @@ import 'package:school_boost/screens/auth/register.dart';
 import 'package:school_boost/screens/auth/registration_form.dart';
 import 'package:school_boost/screens/auth/user_acc.dart';
 import 'screens/home.dart'; 
-
 import 'screens/auth/login.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'screens/donations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    DonationScreen(),
+    Donations(),
     UpdatesScreen(),
     ProfileScreen(),
   ];
@@ -80,23 +80,6 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue[900],
         onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-// Donation Screen
-class DonationScreen extends StatelessWidget {
-  const DonationScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Donation'),
-      ),
-      body: Center(
-        child: Text('Make a Donation Here!'),
       ),
     );
   }

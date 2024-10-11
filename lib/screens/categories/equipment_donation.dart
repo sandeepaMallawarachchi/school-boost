@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../widgets/equipment_donation_form.dart'; // Import your form
 
 class EquipmentDonationPage extends StatefulWidget {
+  const EquipmentDonationPage({super.key});
+
   @override
   _EquipmentDonationPageState createState() => _EquipmentDonationPageState();
 }
@@ -75,6 +77,8 @@ class _EquipmentDonationPageState extends State<EquipmentDonationPage> {
 
 // Donation Guidelines
 class DonationGuidelines extends StatelessWidget {
+  const DonationGuidelines({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
