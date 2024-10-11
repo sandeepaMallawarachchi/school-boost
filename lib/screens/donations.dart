@@ -46,73 +46,76 @@ class _DonationsState extends State<Donations> {
                 ),
               ),
               Expanded(
-                child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: _donationsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _donationsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
 
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          'An error occurred. Please try again later.',
-                          style:
-                              TextStyle(color: Colors.blue[900], fontSize: 18),
-                        ),
-                      );
-                    }
-
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'No donations yet.',
-                          style:
-                              TextStyle(color: Colors.blue[900], fontSize: 18),
-                        ),
-                      );
-                    }
-
-                    final donations = snapshot.data!;
-
-                    return ListView.builder(
-                      padding: EdgeInsets.all(20),
-                      itemCount: donations.length,
-                      itemBuilder: (context, index) {
-                        var donation = donations[index];
-                        var timestamp = donation['timestamp'] as Timestamp;
-                        var formattedDate = DateFormat('dd/MM/yyyy hh:mm a')
-                            .format(timestamp.toDate());
-
-                        return Card(
-                          color: Colors.white.withOpacity(0.85),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.all(15),
-                            title: Text(
-                              'Donation: ${donation['typeOfEquipment']}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    'Condition: ${donation['conditionOfEquipment']}'),
-                                Text('Address: ${donation['address']}'),
-                                Text('Date: $formattedDate'),
-                              ],
-                            ),
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            'An error occurred. Please try again later.',
+                            style: TextStyle(
+                                color: Colors.blue[900], fontSize: 18),
                           ),
                         );
-                      },
-                    );
-                  },
+                      }
+
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'No donations yet.',
+                            style: TextStyle(
+                                color: Colors.blue[900], fontSize: 18),
+                          ),
+                        );
+                      }
+
+                      final donations = snapshot.data!;
+
+                      return ListView.builder(
+                        padding: EdgeInsets.all(20),
+                        itemCount: donations.length,
+                        itemBuilder: (context, index) {
+                          var donation = donations[index];
+                          var timestamp = donation['timestamp'] as Timestamp;
+                          var formattedDate = DateFormat('dd/MM/yyyy hh:mm a')
+                              .format(timestamp.toDate());
+
+                          return Card(
+                            color: Colors.white.withOpacity(0.85),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(15),
+                              title: Text(
+                                'Donation: ${donation['typeOfEquipment']}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      'Condition: ${donation['conditionOfEquipment']}'),
+                                  Text('Address: ${donation['address']}'),
+                                  Text('Date: $formattedDate'),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

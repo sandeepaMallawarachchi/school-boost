@@ -21,7 +21,7 @@ class DatabaseService {
       });
     } catch (e) {
       print('Error adding campaign: $e');
-      rethrow; // Throwing error so that it can be caught in the UI layer
+      rethrow;
     }
   }
 
@@ -83,28 +83,23 @@ class DatabaseService {
   Future<List<Map<String, dynamic>>> getUserDonations() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final String? currentUid =
-          prefs.getString('user_uid'); // Get user UID from SharedPreferences
+      final String? currentUid = prefs.getString('user_uid');
 
       if (currentUid != null) {
-        // Query Firestore for donations matching the user UID
-        QuerySnapshot querySnapshot = await _firestore
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
             .collection('equipments')
-            .where('user_uid', isEqualTo: currentUid)
+            .doc(currentUid)
             .get();
 
-        // Map each document to a list of equipment details
-        List<Map<String, dynamic>> donationList = querySnapshot.docs.map((doc) {
-          return doc.data() as Map<String, dynamic>;
-        }).toList();
-
-        return donationList; // Return the list of equipment details
+        if (documentSnapshot.exists) {
+          return [documentSnapshot.data() as Map<String, dynamic>];
+        } else {
+          return [];
+        }
       } else {
-        // Return empty list if there's no UID in local storage
         return [];
       }
     } catch (e) {
-      // Log the error message and return an empty list
       print('Error getting user donations: $e');
       return [];
     }

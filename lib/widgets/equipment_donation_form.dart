@@ -72,7 +72,7 @@ class _EquipmentDonationFormState extends State<EquipmentDonationForm> {
                             return null;
                           }),
                           SizedBox(height: 20),
-                          _buildDropdown('Type of Equipment', ['Type 1', 'Type 2', 'Type 3']),
+                          _buildDropdown('Type of Equipment', ['Books', 'Cloths', 'Shoes']),
                           SizedBox(height: 20),
                           _buildDropdown('Condition of Equipment', ['New', 'Used', 'Damaged']),
                           SizedBox(height: 30),
