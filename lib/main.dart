@@ -164,9 +164,12 @@ class UpdatesScreen extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD
+}
+=======
 }
 
-
+//hi
 
 // Account Screen
 class AccountScreen extends StatelessWidget {
@@ -201,3 +204,4 @@ class AccountScreen extends StatelessWidget {
     );
   }
 }
+>>>>>>> uee/tashini
