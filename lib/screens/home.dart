@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_boost/screens/campaign.dart';
 import '../../services/database.dart';
 import '../../widgets/campaign_card.dart';
 import 'admin/add_campaigns.dart';
@@ -131,10 +132,25 @@ class HomeScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final campaign = campaigns[index];
 
-                            return CampaignCard(
-                              imagePath: campaign['imageUrl'],
-                              title: campaign['title'],
-                              description: campaign['description'],
+                            return GestureDetector(
+                              onTap: () {
+                                // Navigate to campaign details
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CampaignDetailPage(
+                                      imagePath: campaign['imageUrl'],
+                                      title: campaign['title'],
+                                      description: campaign['description'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: CampaignCard(
+                                imagePath: campaign['imageUrl'],
+                                title: campaign['title'],
+                                description: campaign['description'],
+                              ),
                             );
                           },
                         );

@@ -154,7 +154,7 @@ class UpdatesScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StudentFundApp()),
+                  MaterialPageRoute(builder: (context) => BankDetails()),
                 );
               },
               child: Text('Bank Details'),
@@ -164,44 +164,43 @@ class UpdatesScreen extends StatelessWidget {
       ),
     );
   }
-<<<<<<< HEAD
 }
-=======
-}
+// =======
+// }
 
-//hi
+// //hi
 
-// Account Screen
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+// // Account Screen
+// class AccountScreen extends StatelessWidget {
+//   const AccountScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Account'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Manage your Account Here!'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddCampaignScreen(),
-                  ),
-                );
-              },
-              child: Text('Add Campaign Card'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
->>>>>>> uee/tashini
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Account'),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text('Manage your Account Here!'),
+//             SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => AddCampaignScreen(),
+//                   ),
+//                 );
+//               },
+//               child: Text('Add Campaign Card'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+// >>>>>>> uee/tashini

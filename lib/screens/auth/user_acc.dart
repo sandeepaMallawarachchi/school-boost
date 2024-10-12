@@ -30,7 +30,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String? uid = prefs.getString('user_uid'); // Get UID from local storage
 
     if (uid != null) {
-      DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      DocumentSnapshot userData =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (userData.exists) {
         var data = userData.data() as Map<String, dynamic>;
         _usernameController.text = data['username'] ?? '';
@@ -56,7 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       String contact = _contactController.text.trim();
       String address = _addressController.text.trim();
 
-      bool result = await updateUserDetails(uid, username, email, contact, address);
+      bool result =
+          await updateUserDetails(uid, username, email, contact, address);
 
       if (result) {
         setState(() {
@@ -78,115 +80,125 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background Image
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/Donor_reg.jpg'),
-                fit: BoxFit.cover,
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Background Image
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/Donor_reg.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: 60,
-            left: 40,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'User Profile',
-                  style: TextStyle(
-                    fontSize: 32,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+            Positioned(
+              top: 60,
+              left: 40,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'User Profile',
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Page Content
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 40),
+                      // User Icon
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.grey.shade300,
+                          child: Icon(
+                            Icons.person_outline,
+                            size: 60,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 40),
+                      // Username Field
+                      _buildTextField(
+                          _usernameController, 'Username', Icons.person_outline),
+                      SizedBox(height: 20),
+                      // Email Field
+                      _buildTextField(
+                          _emailController, 'Email', Icons.email_outlined),
+                      SizedBox(height: 20),
+                      // Contact Number Field
+                      _buildTextField(_contactController, 'Contact Number',
+                          Icons.phone_outlined),
+                      SizedBox(height: 20),
+                      // Address Field
+                      _buildTextField(_addressController, 'Address',
+                          Icons.location_on_outlined),
+                      SizedBox(height: 50),
+                      // Divider Line
+                      SizedBox(
+                        width: 270,
+                        child: Divider(
+                          color: const Color.fromARGB(255, 11, 87, 162),
+                          thickness: 2,
+                        ),
+                      ),
+                      SizedBox(height: 70),
+                      // Save Button (only when editing)
+                      if (_isEditing)
+                        ElevatedButton(
+                          onPressed: _saveProfile,
+                          child: Text('Save'),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 100, vertical: 18),
+                            backgroundColor: Colors.blue.shade700,
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 5,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          // Page Content
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 40),
-                    // User Icon
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey.shade300,
-                        child: Icon(
-                          Icons.person_outline,
-                          size: 60,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 40),
-                    // Username Field
-                    _buildTextField(_usernameController, 'Username', Icons.person_outline),
-                    SizedBox(height: 20),
-                    // Email Field
-                    _buildTextField(_emailController, 'Email', Icons.email_outlined),
-                    SizedBox(height: 20),
-                    // Contact Number Field
-                    _buildTextField(_contactController, 'Contact Number', Icons.phone_outlined),
-                    SizedBox(height: 20),
-                    // Address Field
-                    _buildTextField(_addressController, 'Address', Icons.location_on_outlined),
-                    SizedBox(height: 50),
-                    // Divider Line
-                    SizedBox(
-                      width: 270,
-                      child: Divider(
-                        color: const Color.fromARGB(255, 11, 87, 162),
-                        thickness: 2,
-                      ),
-                    ),
-                    SizedBox(height: 70),
-                    // Save Button (only when editing)
-                    if (_isEditing)
-                      ElevatedButton(
-                        onPressed: _saveProfile,
-                        child: Text('Save'),
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 100, vertical: 18),
-                          backgroundColor: Colors.blue.shade700,
-                          textStyle: TextStyle(color: Colors.white, fontSize: 18),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          elevation: 5,
-                        ),
-                      ),
-                  ],
-                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   // Build reusable text field
-  Widget _buildTextField(TextEditingController controller, String hintText, IconData prefixIcon) {
+  Widget _buildTextField(
+      TextEditingController controller, String hintText, IconData prefixIcon) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.9),

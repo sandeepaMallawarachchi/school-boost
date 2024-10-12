@@ -14,12 +14,12 @@ class _EquipmentDonationFormState extends State<EquipmentDonationForm> {
   String _conditionOfEquipment = '';
   String _name = '';
   String _phone = ''; 
-  String _address = ''; // User will input this manually
+  String _address = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, // Prevents background from resizing
+      resizeToAvoidBottomInset: false,
       body: Container(
         color: Colors.blue[900],
         child: SafeArea(
@@ -79,15 +79,37 @@ class _EquipmentDonationFormState extends State<EquipmentDonationForm> {
                           ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                // Submit the form
-                                await DatabaseService().addEquipment(
-                                  _name,
-                                  _phone,
-                                  _address, // Address entered by user
-                                  _typeOfEquipment,
-                                  _conditionOfEquipment
-                                  // Removed pickupLocation
-                                );
+                                // Try to submit the form
+                                try {
+                                  await DatabaseService().addEquipment(
+                                    _name,
+                                    _phone,
+                                    _address, // Address entered by user
+                                    _typeOfEquipment,
+                                    _conditionOfEquipment,
+                                  );
+
+                                  // Show success Snackbar
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Donation submitted successfully!'),
+                                      backgroundColor: Colors.green, // Success color
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+
+                                  // Optionally, clear the form fields or navigate to another page
+                                  _formKey.currentState!.reset();
+                                } catch (e) {
+                                  // Show error Snackbar
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error: ${e.toString()}'),
+                                      backgroundColor: Colors.red, // Error color
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
