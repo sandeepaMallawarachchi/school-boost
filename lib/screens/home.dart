@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:school_boost/screens/events.dart';
 import 'package:school_boost/screens/campaign.dart';
 import '../../services/database.dart';
 import '../../widgets/campaign_card.dart';
-import 'admin/add_campaigns.dart';
 import 'package:school_boost/screens/categories/equipment_donation.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -35,19 +35,6 @@ class HomeScreen extends StatelessWidget {
                     title: Text('Home'),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
-                    actions: [
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddCampaignScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.all(16.0),
@@ -72,8 +59,7 @@ class HomeScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    EquipmentDonationPage(), // Navigate to Equipment Donation Page
+                                builder: (context) => EquipmentDonationPage(),
                               ),
                             );
                           },
@@ -82,21 +68,26 @@ class HomeScreen extends StatelessWidget {
                           imagePath: 'assets/images/category2.jpg',
                           label: 'Exam Support',
                           onTap: () {
-                            // Add navigation logic for Exam Support here
+                            // Navigate to Exam Support page if needed
                           },
                         ),
                         CategoryCard(
                           imagePath: 'assets/images/category3.jpg',
                           label: 'Events',
                           onTap: () {
-                            // Add navigation logic for Events here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EventsScreen(),
+                              ),
+                            );
                           },
                         ),
                         CategoryCard(
                           imagePath: 'assets/images/category4.jpg',
                           label: 'Best Performers',
                           onTap: () {
-                            // Add navigation logic for Best Performers here
+                            // Navigate to Best Performers page if needed
                           },
                         ),
                       ],
@@ -120,8 +111,7 @@ class HomeScreen extends StatelessWidget {
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
                         }
 
@@ -134,7 +124,6 @@ class HomeScreen extends StatelessWidget {
 
                             return GestureDetector(
                               onTap: () {
-                                // Navigate to campaign details
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -170,19 +159,19 @@ class HomeScreen extends StatelessWidget {
 class CategoryCard extends StatelessWidget {
   final String imagePath;
   final String label;
-  final VoidCallback onTap; // Add onTap callback
+  final VoidCallback onTap;
 
   const CategoryCard({
     required this.imagePath,
     required this.label,
-    required this.onTap, // Add this line to accept onTap callback
+    required this.onTap,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // Trigger the onTap callback when the card is clicked
+      onTap: onTap,
       child: Container(
         width: 120,
         margin: EdgeInsets.only(left: 15, right: 15),

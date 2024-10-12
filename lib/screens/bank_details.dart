@@ -10,7 +10,7 @@ class BankDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const BankDetailsPage(campaignTitle: 'Your Campaign Title Here'),
+      home: const BankDetailsPage(campaignTitle: 'Your Campaign Tixxtle Here'),
     );
   }
 }

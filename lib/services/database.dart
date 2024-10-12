@@ -178,4 +178,78 @@ class DatabaseService {
           .toList();
     });
   }
+
+  // Function to get payment details
+  Future<List<Map<String, dynamic>>> getPaymentsData() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('payments').get();
+      return querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      print('Error fetching payments data: $e');
+      return [];
+    }
+  }
+
+  // Function to get equipment donation details
+  Future<List<Map<String, dynamic>>> getEquipmentData() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('equipments').get();
+      return querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      print('Error fetching equipment data: $e');
+      return [];
+    }
+  }
+
+  // Add a event to Firestore
+  Future<void> addEvent(
+      String title, String description, String imageUrl) async {
+    try {
+      await _firestore.collection('events').add({
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error adding event: $e');
+      rethrow;
+    }
+  }
+
+  // Fetch campaigns from Firestore
+  Stream<List<Map<String, dynamic>>> getEvents() {
+    return _firestore.collection('events').snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                'title': doc['title'],
+                'description': doc['description'],
+                'imageUrl': doc['imageUrl'],
+              })
+          .toList();
+    });
+  }
+
+  // Upload an image to Firebase Storage and return the download URL
+  Future<String> uploadEventImage(File image) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference storageRef = _storage.ref().child('Event_images/$fileName');
+      UploadTask uploadTask = storageRef.putFile(image);
+      TaskSnapshot snapshot = await uploadTask;
+
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return '';
+    }
+  }
 }
