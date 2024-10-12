@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:school_boost/screens/events.dart';
+import 'package:school_boost/screens/campaign.dart';
 import '../../services/database.dart';
 import '../../widgets/campaign_card.dart';
-import 'admin/add_campaigns.dart';
+import 'package:school_boost/screens/categories/equipment_donation.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -33,19 +35,6 @@ class HomeScreen extends StatelessWidget {
                     title: Text('Home'),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
-                    actions: [
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddCampaignScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.all(16.0),
@@ -66,18 +55,40 @@ class HomeScreen extends StatelessWidget {
                         CategoryCard(
                           imagePath: 'assets/images/category1.jpg',
                           label: 'Equipment',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EquipmentDonationPage(),
+                              ),
+                            );
+                          },
                         ),
                         CategoryCard(
                           imagePath: 'assets/images/category2.jpg',
                           label: 'Exam Support',
+                          onTap: () {
+                            // Navigate to Exam Support page if needed
+                          },
                         ),
                         CategoryCard(
                           imagePath: 'assets/images/category3.jpg',
                           label: 'Events',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EventsScreen(),
+                              ),
+                            );
+                          },
                         ),
                         CategoryCard(
                           imagePath: 'assets/images/category4.jpg',
                           label: 'Best Performers',
+                          onTap: () {
+                            // Navigate to Best Performers page if needed
+                          },
                         ),
                       ],
                     ),
@@ -100,8 +111,7 @@ class HomeScreen extends StatelessWidget {
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
                         }
 
@@ -112,10 +122,24 @@ class HomeScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final campaign = campaigns[index];
 
-                            return CampaignCard(
-                              imagePath: campaign['imageUrl'],
-                              title: campaign['title'],
-                              description: campaign['description'],
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CampaignDetailPage(
+                                      imagePath: campaign['imageUrl'],
+                                      title: campaign['title'],
+                                      description: campaign['description'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: CampaignCard(
+                                imagePath: campaign['imageUrl'],
+                                title: campaign['title'],
+                                description: campaign['description'],
+                              ),
                             );
                           },
                         );
@@ -135,36 +159,41 @@ class HomeScreen extends StatelessWidget {
 class CategoryCard extends StatelessWidget {
   final String imagePath;
   final String label;
+  final VoidCallback onTap;
 
   const CategoryCard({
     required this.imagePath,
     required this.label,
+    required this.onTap,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 120,
-      margin: EdgeInsets.only(left: 15, right: 15),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.asset(
-              imagePath,
-              height: 90,
-              width: 150,
-              fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 120,
+        margin: EdgeInsets.only(left: 15, right: 15),
+        child: Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset(
+                imagePath,
+                height: 90,
+                width: 150,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:school_boost/screens/bank_details.dart';
 import 'package:school_boost/screens/categories/post_page.dart';
 import 'package:school_boost/screens/auth/register.dart';
 import 'package:school_boost/screens/auth/registration_form.dart';
 import 'package:school_boost/screens/auth/user_acc.dart';
-import 'screens/home.dart'; // Make sure this imports the HomeScreen
-
-import 'screens/auth/login.dart'; // Import the LoginScreen
+import 'screens/home.dart'; 
+import 'screens/auth/login.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/admin/add_campaigns.dart';
+import 'screens/donations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,7 @@ class SchoolBoostApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(), // Starting with the HomePage that contains the nav bar
+      home: LoginScreen(), // Starting with the HomePage that contains the nav bar
     );
   }
 }
@@ -43,9 +43,9 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    DonationScreen(),
+    Donations(),
     UpdatesScreen(),
-    AccountScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -81,23 +81,6 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue[900],
         onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-// Donation Screen
-class DonationScreen extends StatelessWidget {
-  const DonationScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Donation'),
-      ),
-      body: Center(
-        child: Text('Make a Donation Here!'),
       ),
     );
   }
@@ -166,41 +149,15 @@ class UpdatesScreen extends StatelessWidget {
               },
               child: Text('Post Page'),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-
-// Account Screen
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Account'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Manage your Account Here!'),
-            SizedBox(height: 20),
+              SizedBox(height: 20), // Adds space between buttons
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => AddCampaignScreen(),
-                  ),
+                  MaterialPageRoute(builder: (context) => BankDetails()),
                 );
               },
-              child: Text('Add Campaign Card'),
+              child: Text('Bank Details'),
             ),
           ],
         ),
@@ -208,3 +165,42 @@ class AccountScreen extends StatelessWidget {
     );
   }
 }
+// =======
+// }
+
+// //hi
+
+// // Account Screen
+// class AccountScreen extends StatelessWidget {
+//   const AccountScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Account'),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text('Manage your Account Here!'),
+//             SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => AddCampaignScreen(),
+//                   ),
+//                 );
+//               },
+//               child: Text('Add Campaign Card'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+// >>>>>>> uee/tashini

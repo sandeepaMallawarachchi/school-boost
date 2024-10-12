@@ -1,30 +1,25 @@
-// add_campaign_screen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart'; // For getting temp directory
-import 'package:flutter/services.dart'; // For loading asset as byte data
-import '../../services/database.dart'; // Import the DatabaseService
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
+import '../../services/database.dart';
 
-class AddCampaignScreen extends StatefulWidget {
-  const AddCampaignScreen({super.key});
+class AddEventScreen extends StatefulWidget {
+  const AddEventScreen({super.key});
 
   @override
-  _AddCampaignScreenState createState() => _AddCampaignScreenState();
+  _AddEventScreenState createState() => _AddEventScreenState();
 }
 
-class _AddCampaignScreenState extends State<AddCampaignScreen> {
+class _AddEventScreenState extends State<AddEventScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   File? _image;
   final DatabaseService _dbService = DatabaseService();
-
   bool isLoading = false;
-
-  // Default image path (in assets)
   final String defaultImagePath = 'assets/images/default.jpg';
 
-  // Function to pick an image from the gallery
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -35,30 +30,26 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
       });
     } else {
       setState(() {
-        _image = null; // No image selected, use the default one
+        _image = null;
       });
     }
   }
 
-  // Function to upload an image to Firebase Storage
   Future<String> _uploadImage(File image) async {
-    return await _dbService.uploadImage(image); // Use the DatabaseService
+    return await _dbService.uploadEventImage(image);
   }
 
-  // Function to get the default image as a File
   Future<File> _getDefaultImageFile() async {
-    final byteData =
-        await rootBundle.load(defaultImagePath); // Load from assets
-    final tempDir = await getTemporaryDirectory(); // Get temp directory
+    final byteData = await rootBundle.load(defaultImagePath);
+    final tempDir = await getTemporaryDirectory();
     final file = File('${tempDir.path}/default.jpg');
     await file.writeAsBytes(byteData.buffer.asUint8List());
     return file;
   }
 
-  // Function to add a campaign
-  void _addCampaign() async {
+  void _addEvent() async {
     setState(() {
-      isLoading = true; // Disable button and show "Adding Campaign..."
+      isLoading = true;
     });
 
     String title = _titleController.text.trim();
@@ -68,18 +59,15 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
       String imageUrl;
 
       if (_image != null) {
-        // Upload the user-selected image to Firebase Storage
         imageUrl = await _uploadImage(_image!);
       } else {
-        // No image selected, upload the default image to Firebase Storage
         File defaultImageFile = await _getDefaultImageFile();
         imageUrl = await _uploadImage(defaultImageFile);
       }
 
       if (imageUrl.isNotEmpty) {
-        // Add the campaign to Firestore with the image URL
-        await _dbService.addCampaign(title, description, imageUrl);
-        Navigator.pop(context); // Go back after adding the campaign
+        await _dbService.addEvent(title, description, imageUrl);
+        Navigator.pop(context);
       } else {
         _showSnackBar('Failed to upload image');
       }
@@ -88,11 +76,10 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
     }
 
     setState(() {
-      isLoading = false; // Re-enable button and change text back
+      isLoading = false;
     });
   }
 
-  // Function to show a SnackBar with a message
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
@@ -104,17 +91,14 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/backg.jpg'), // Background image path
+                image: AssetImage('assets/images/backg.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          // Foreground Elements
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -122,11 +106,9 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 50), // Added spacing at the top
-
-                    // Campaign Title Input
+                    SizedBox(height: 50),
                     Text(
-                      'Add Campaign',
+                      'Add Event',
                       style: TextStyle(
                         fontSize: 28,
                         color: Colors.blue[900],
@@ -134,12 +116,9 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                       ),
                     ),
                     SizedBox(height: 20),
-
-                    // Pick Image Button
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        // Show either the selected image or the default image
                         Container(
                           height: 200,
                           width: 350,
@@ -148,12 +127,11 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                               image: _image != null
                                   ? FileImage(_image!)
                                   : AssetImage(defaultImagePath)
-                                      as ImageProvider, // Default image
+                                      as ImageProvider,
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        // Camera icon over the image
                         Positioned(
                           child: IconButton(
                             icon: Icon(
@@ -161,29 +139,23 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                               color: Colors.blue[900],
                               size: 30,
                             ),
-                            onPressed: _pickImage, // Open image picker
+                            onPressed: _pickImage,
                           ),
                         ),
                       ],
                     ),
                     SizedBox(height: 20),
-
                     TextField(
                       controller: _titleController,
                       decoration: InputDecoration(
-                        hintText: 'Campaign Title', // Placeholder text
-                        hintStyle: TextStyle(
-                            color: Colors.grey), // Placeholder text color
-                        prefixIcon: Icon(Icons.title,
-                            color:
-                                Colors.grey), // Add an icon like login fields
+                        hintText: 'Event Title',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        prefixIcon: Icon(Icons.title, color: Colors.grey),
                         filled: true,
-                        fillColor: Colors.white
-                            .withOpacity(0.8), // Semi-transparent background
+                        fillColor: Colors.white.withOpacity(0.8),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                              30), // Circular corners like in login fields
-                          borderSide: BorderSide.none, // Remove borders
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
                         ),
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 20,
@@ -193,42 +165,33 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                       keyboardType: TextInputType.text,
                     ),
                     SizedBox(height: 20),
-
-                    // Description Input
                     TextField(
                       controller: _descriptionController,
                       decoration: InputDecoration(
-                        hintText: 'Description', // Placeholder text
-                        hintStyle: TextStyle(
-                            color: Colors.grey), // Placeholder text color
-                        prefixIcon: Icon(Icons.description,
-                            color: Colors.grey), // Add an icon
+                        hintText: 'Description',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        prefixIcon:
+                            Icon(Icons.description, color: Colors.grey),
                         filled: true,
-                        fillColor: Colors.white
-                            .withOpacity(0.8), // Semi-transparent background
+                        fillColor: Colors.white.withOpacity(0.8),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                              30), // Circular corners like in login fields
-                          borderSide: BorderSide.none, // Remove borders
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
                         ),
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 18,
                         ),
                       ),
-                      maxLines: 3, // Allow multiple lines for description
+                      maxLines: 3,
                       keyboardType: TextInputType.multiline,
                     ),
                     SizedBox(height: 20),
-
-                    // Add Campaign Button
                     ElevatedButton(
-                      onPressed: isLoading
-                          ? null
-                          : _addCampaign, // Disable button if loading
+                      onPressed: isLoading ? null : _addEvent,
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 80, vertical: 18),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 80, vertical: 18),
                         backgroundColor: Colors.blue.shade700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
@@ -236,9 +199,7 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                         elevation: 5,
                       ),
                       child: Text(
-                        isLoading
-                            ? 'Adding Campaign...'
-                            : 'Add Campaign', // Change text based on loading state
+                        isLoading ? 'Adding Event...' : 'Add Event',
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
