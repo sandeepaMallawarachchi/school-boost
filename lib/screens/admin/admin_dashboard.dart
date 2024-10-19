@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:school_boost/screens/admin/all_events.dart';
-import 'package:school_boost/services/database.dart'; // Adjust the import to your database file
 import 'package:school_boost/screens/admin/add_campaigns.dart';
+import 'package:school_boost/screens/auth/login.dart';
+import 'package:school_boost/services/database.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -31,8 +32,7 @@ class AdminDashboard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  AddCampaignScreen()),
+                              builder: (context) => AddCampaignScreen()),
                         );
                       }),
                       _buildMenuItem(Icons.payment, 'Payments', () {
@@ -42,8 +42,7 @@ class AdminDashboard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  AllEventsScreen()),
+                              builder: (context) => AllEventsScreen()),
                         );
                       }),
                       _buildMenuItem(Icons.contact_mail, 'Contacts', () {
@@ -91,10 +90,42 @@ class AdminDashboard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30.0),
-                child: Image.asset(
-                  'assets/images/stats.png',
-                  width: 200,
-                  height: 250,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'assets/images/stats.png',
+                      width: 200,
+                      height: 250,
+                    ),
+                    SizedBox(
+                        height:
+                            20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue.shade700,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      ),
+                      child: Text(
+                        'Log Out',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

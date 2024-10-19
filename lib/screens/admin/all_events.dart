@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/database.dart';
+import 'edit_event.dart';
 import 'add_event.dart';
 
 class AllEventsScreen extends StatelessWidget {
@@ -19,7 +20,6 @@ class AllEventsScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Background Image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -28,7 +28,6 @@ class AllEventsScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Event List
           StreamBuilder<List<Map<String, dynamic>>>(
             stream: _dbService.getEvents(),
             builder: (context, snapshot) {
@@ -71,6 +70,31 @@ class AllEventsScreen extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.blue.shade700),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditEventScreen(
+                                    eventId: event['id'],
+                                    eventData: event,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              _confirmDelete(context, event['id']);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -89,6 +113,38 @@ class AllEventsScreen extends StatelessWidget {
         child: Icon(Icons.add),
         backgroundColor: Colors.blue.shade700,
       ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, String eventId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete Event'),
+        content: Text('Are you sure you want to delete this event?'),
+        actions: [
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text('Delete'),
+            onPressed: () {
+              _dbService.deleteEvent(eventId);
+              Navigator.pop(context);
+              _showSnackBar(context, 'Event deleted successfully');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
     );
   }
 }
