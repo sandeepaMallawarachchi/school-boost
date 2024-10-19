@@ -252,4 +252,19 @@ class DatabaseService {
       return '';
     }
   }
+
+  // Update event in Firestore by its ID
+  Future<void> updateEvent(
+      String eventId, String title, String description, String imageUrl) async {
+    await _firestore.collection('events').doc(eventId).update({
+      'title': title,
+      'description': description,
+      'imageUrl': imageUrl,
+    });
+  }
+
+  //delete event
+  Future<void> deleteEvent(String eventId) async {
+    await _firestore.collection('events').doc(eventId).delete();
+  }
 }
